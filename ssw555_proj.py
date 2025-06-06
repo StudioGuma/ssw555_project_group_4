@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from sys import *
+from prettytable import PrettyTable
 
 def is_valid_tag(level: int, tag: str) -> bool:
 	match level:
