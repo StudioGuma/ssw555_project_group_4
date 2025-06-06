@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-# Michael Socas
-# I pledge my honor that I have abided by the Stevens Honor System.
-
 from sys import *
 
 def is_valid_tag(level: int, tag: str) -> bool:
