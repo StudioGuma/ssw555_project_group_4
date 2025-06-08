@@ -1,0 +1,206 @@
+0 NOTE Michael Socas
+0 HEAD
+1 SOUR Family Echo
+2 WWW https://www.familyecho.com/
+1 FILE Paul McCartney
+1 DATE 22 MAY 2025
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME James Paul /McCartney/
+2 GIVN James Paul
+2 NPFX Sir
+2 SURN McCartney
+1 SEX M
+1 BIRT
+2 DATE 18 JUN 1942
+1 FAMS @F1@
+1 FAMS @F2@
+1 FAMS @F3@
+1 FAMC @F4@
+0 @I2@ INDI
+1 NAME James /McCartney/
+2 GIVN James
+2 NICK Jim
+2 SURN McCartney
+1 SEX M
+1 BIRT
+2 DATE 1902
+1 DEAT Y
+2 DATE 1976
+1 FAMS @F4@
+1 FAMS @F5@
+0 @I3@ INDI
+1 NAME Mary Patricia /Mohin/
+2 GIVN Mary Patricia
+2 SURN Mohin
+2 _MARNM McCartney
+1 SEX F
+1 BIRT
+2 DATE 1909
+1 DEAT Y
+2 DATE 1956
+1 FAMS @F4@
+0 @I4@ INDI
+1 NAME Peter Michael /McCartney/
+2 GIVN Peter Michael
+2 NICK Mike McGear
+2 SURN McCartney
+1 SEX M
+1 BIRT
+2 DATE 7 JAN 1944
+1 FAMC @F4@
+0 @I5@ INDI
+1 NAME Angie /McCartney/
+2 GIVN Angie
+2 SURN McCartney
+2 _MARNM McCartney
+1 SEX F
+1 DEAT Y
+1 FAMS @F5@
+0 @I6@ INDI
+1 NAME Ruth /McCartney/
+2 GIVN Ruth
+2 SURN McCartney
+2 _MARNM McCartney
+1 SEX F
+1 FAMC @F5@
+0 @I7@ INDI
+1 NAME Linda Louise /Eastman/
+2 GIVN Linda Louise
+2 SURN Eastman
+2 _MARNM McCartney
+1 SEX F
+1 BIRT
+2 DATE 24 SEP 1941
+1 DEAT Y
+2 DATE 17 APR 1998
+1 FAMS @F2@
+1 FAMS @F6@
+1 FAMC @F7@
+0 @I8@ INDI
+1 NAME Heather Louise McCartney
+2 GIVN Heather Louise
+2 SURN McCartney
+1 SEX F
+1 BIRT
+2 DATE 31 DEC 1962
+1 FAMC @F2@
+2 PEDI adopted
+0 @I9@ INDI
+1 NAME Mary Anna /McCartney/
+2 GIVN Mary Anna
+2 SURN McCartney
+1 SEX F
+1 BIRT
+2 DATE 28 AUG 1969
+1 FAMC @F2@
+0 @I10@ INDI
+1 NAME Leopold Vail /Eastman/
+2 GIVN Leopold Vail
+2 NICK Lee
+2 SURN Eastman
+1 SEX M
+1 BIRT
+2 DATE 12 JAN 1910
+1 DEAT Y
+2 DATE 30 JUL 1991
+1 FAMS @F7@
+0 @I11@ INDI
+1 NAME Louise /Lindner/
+2 GIVN Louise
+2 SURN Lindner
+2 _MARNM Eastman
+1 SEX F
+1 DEAT Y
+2 DATE 1962
+1 FAMS @F7@
+0 @I12@ INDI
+1 NAME Stella Nina /McCartney/
+2 GIVN Stella Nina
+2 SURN McCartney
+1 SEX F
+1 BIRT
+2 DATE 13 SEP 1971
+1 FAMC @F2@
+0 @I13@ INDI
+1 NAME James Louis /McCartney/
+2 GIVN James Louis
+2 SURN McCartney
+1 BIRT
+2 DATE 12 SEP 1977
+1 FAMC @F2@
+0 @I14@ INDI
+1 NAME Heather Anne /Mills/
+2 GIVN Heather Anne
+2 SURN Mills
+1 SEX F
+1 BIRT
+2 DATE 12 JAN 1968
+1 FAMS @F3@
+0 @I15@ INDI
+1 NAME Beatrice Milly /McCartney/
+2 GIVN Beatrice Milly
+2 SURN McCartney
+1 SEX F
+1 BIRT
+2 DATE 28 OCT 2003
+1 FAMC @F3@
+0 @I16@ INDI
+1 NAME Nancy /Shevell/
+2 GIVN Nancy
+2 SURN Shevell
+2 _MARNM McCartney
+1 SEX F
+1 BIRT
+2 DATE 20 NOV 1959
+1 FAMS @F1@
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I16@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F2@ FAM
+1 HUSB @I1@
+1 WIFE @I7@
+1 CHIL @I8@
+1 CHIL @I9@
+1 CHIL @I12@
+1 CHIL @I13@
+1 _CURRENT N
+1 _PRIMARY N
+0 @F3@ FAM
+1 HUSB @I1@
+1 WIFE @I14@
+1 CHIL @I15@
+1 _CURRENT N
+1 _PRIMARY N
+1 DIV
+2 DATE 18 FEB 2008
+0 @F4@ FAM
+1 HUSB @I2@
+1 WIFE @I3@
+1 CHIL @I1@
+1 CHIL @I4@
+1 _CURRENT N
+1 _PRIMARY N
+0 @F5@ FAM
+1 HUSB @I2@
+1 WIFE @I5@
+1 CHIL @I6@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 @F6@ FAM
+1 WIFE @I7@
+1 _CURRENT N
+1 _PRIMARY N
+0 @F7@ FAM
+1 HUSB @I10@
+1 WIFE @I11@
+1 CHIL @I7@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 TRLR
