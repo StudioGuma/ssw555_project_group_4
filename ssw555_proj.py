@@ -23,6 +23,9 @@ def main() -> int:
 		if (not argv[1].lower().endswith(".ged")):
 			raise Exception(argv[0] + ": input file is not a GEDCOM file (.ged)")
 
+		indi_table = PrettyTable()
+		fam_table = PrettyTable()
+
 		with open(argv[1], "r") as ged:
 			line: string = ged.readline()
 
@@ -33,27 +36,32 @@ def main() -> int:
 				for i in range(len(params)):
 					params[i] = params[i].rstrip()
 
-				if (len(params) > 2 and (params[2] == "INDI" or params[2] == "FAM")):
-					print("<-- " + params[0] + " | " + params[2] + " | ", end="")
-					if (is_valid_tag(int(params[0]), params[2])):
-						print("Y", end="")
-					else:
-						print("N", end="")
-					print(" | " + params[1])
+				# if (len(params) > 2 and (params[2] == "INDI" or params[2] == "FAM")):
+				# 	print("<-- " + params[0] + " | " + params[2] + " | ", end="")
+				# 	if (is_valid_tag(int(params[0]), params[2])):
+				# 		print("Y", end="")
+				# 	else:
+				# 		print("N", end="")
+				# 	print(" | " + params[1])
 
-				else:
-					print("<-- " + params[0] + " | " + params[1] + " | ", end="")
-					if (is_valid_tag(int(params[0]), params[1])):
-						print("Y", end="")
-					else:
-						print("N", end="")
+				# else:
+				# 	print("<-- " + params[0] + " | " + params[1] + " | ", end="")
+				# 	if (is_valid_tag(int(params[0]), params[1])):
+				# 		print("Y", end="")
+				# 	else:
+				# 		print("N", end="")
 					
-					if (len(params) > 2):
-						print(" | " + params[2])
-					else:
-						print("")
+				# 	if (len(params) > 2):
+				# 		print(" | " + params[2])
+				# 	else:
+				# 		print("")
 
 				line = ged.readline()
+		
+		print("Individuals")
+		print(indi_table)
+		print("Families")
+		print(fam_table)
 
 	except Exception as e:
 		print(e, file=stderr)
