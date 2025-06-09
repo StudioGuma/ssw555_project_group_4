@@ -24,10 +24,16 @@ def main() -> int:
 			raise Exception(argv[0] + ": input file is not a GEDCOM file (.ged)")
 
 		indi_table = PrettyTable()
+		indi_table.field_names = ["ID", "Name", "Gender", "Date of Birth", "Age", "Alive?",
+		"Date of Death", "Child(ren)", "Spouse(s)"]
 		fam_table = PrettyTable()
+		fam_table.field_names = ["ID", "Date of Marriage", "Divorced?", "Spouse ID(s)",
+		"Spouse Name(s)", "Child(ren)"]
+
 
 		with open(argv[1], "r") as ged:
 			line: string = ged.readline()
+			current_row: list = []
 
 			while (line != ""):
 				print("--> " + line, end="")
@@ -35,6 +41,16 @@ def main() -> int:
 				params: list = line.split(" ", 2)
 				for i in range(len(params)):
 					params[i] = params[i].rstrip()
+
+				if (len(params) > 2 and is_valid_tag(int(params[0]), params[2])):
+					if (params[2] == "INDI"):
+						print("TODO")
+
+					elif (params[2] == "FAM"):
+						print("TODO")
+
+				elif (is_valid_tag(int(params[0]), params[1])):
+					print("TODO")
 
 				# if (len(params) > 2 and (params[2] == "INDI" or params[2] == "FAM")):
 				# 	print("<-- " + params[0] + " | " + params[2] + " | ", end="")
