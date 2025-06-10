@@ -29,7 +29,6 @@ def main() -> int:
 		fam_table = PrettyTable()
 		fam_table.field_names = ["ID", "Date of Marriage", "Husband", "Wife", "Children", "Date of Divorce"]
 
-
 		with open(argv[1], "r") as ged:
 			line: string = ged.readline()
 
