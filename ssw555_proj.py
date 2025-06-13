@@ -33,6 +33,51 @@ def is_valid_date(year: int, month: int, day: int) -> bool:
 
 	return False
 
+def is_valid_date_str(date: str) -> bool:
+	try:
+		date_split: list = date.split()
+		if (len(date_split) != 3 or date_split[0][0] == '0' or len(date_split[2]) != 4):
+			return False
+
+		day: int = int(date_split[0])
+
+		month: int = -1
+		match date_split[1]:
+			case "JAN":
+				month = 1
+			case "FEB":
+				month = 2
+			case "MAR":
+				month = 3
+			case "APR":
+				month = 4
+			case "MAY":
+				month = 5
+			case "JUN":
+				month = 6
+			case "JUL":
+				month = 7
+			case "AUG":
+				month = 8
+			case "SEP":
+				month = 9
+			case "OCT":
+				month = 10
+			case "NOV":
+				month = 11
+			case "DEC":
+				month = 12
+			case _:
+				return False
+
+		year: int = int(date_split[2])
+
+		return is_valid_date(year, month, day)
+
+	except Exception as e:
+		print(e, file=stderr)
+		return False
+
 def main() -> int:
 	try:
 		if (len(argv) != 2):
@@ -121,6 +166,9 @@ def main() -> int:
 					case 2:
 						if (len(params) > 2 and is_valid_tag(level, params[1])):
 							# guaranteed to be DATE
+							if (not is_valid_date_str(params[2])):
+								raise Exception(argv[0] + ": invalid date")
+
 							if is_birth:
 								cur_indi_row[3] = params[2]
 								is_birth = False
