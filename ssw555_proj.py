@@ -16,6 +16,23 @@ def is_valid_tag(level: int, tag: str) -> bool:
 
 	return false
 
+def is_leap_year(year: int) -> bool:
+	return (year % 400 == 0) or (year % 4 == 0 and year % 100 > 0)
+
+def is_valid_date(year: int, month: int, day: int) -> bool:
+	if (day > 0):
+		match month:
+			case 1 | 3 | 5 | 7 | 8 | 10 | 12:
+				return (day <= 31)
+
+			case 2:
+				return (29 if is_leap_year(year) else 28)
+
+			case 4 | 6 | 9 | 11:
+				return (day <= 30)
+
+	return False
+
 def main() -> int:
 	try:
 		if (len(argv) != 2):
