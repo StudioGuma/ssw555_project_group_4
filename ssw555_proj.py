@@ -26,7 +26,7 @@ def is_valid_date(year: int, month: int, day: int) -> bool:
 				return (day <= 31)
 
 			case 2:
-				return (29 if is_leap_year(year) else 28)
+				return (day <= 29 if is_leap_year(year) else day <= 28)
 
 			case 4 | 6 | 9 | 11:
 				return (day <= 30)
