@@ -167,7 +167,7 @@ def main() -> int:
 						if (len(params) > 2 and is_valid_tag(level, params[1])):
 							# guaranteed to be DATE
 							if (not is_valid_date_str(params[2])):
-								raise Exception(argv[0] + ": invalid date")
+								raise Exception(argv[0] + ": invalid date " + line)
 
 							if is_birth:
 								cur_indi_row[3] = params[2]
