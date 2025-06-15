@@ -35,3 +35,5 @@ birth_data = element.get_birth_data()
 death_data = element.get_death_data()
 birth_date = birth_data[0] if birth_data else None
 death_data = death_data[0] if death_data else None
+age = calculate_age(birth_date, death_date)
+print(f"{name[0]} {name[1]}: Age {age}:)
