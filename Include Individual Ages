@@ -30,10 +30,10 @@ gedcom_parser.parser_file(ssw555_proj1.ged)
 
 for element in gedcom_parser.get_root_child_element():
   if isinstance(element, IndividualElement):
-name: element.get__name()
-birth_data = element.get_birth_data()
-death_data = element.get_death_data()
-birth_date = birth_data[0] if birth_data else None
-death_data = death_data[0] if death_data else None
-age = calculate_age(birth_date, death_date)
-print(f"{name[0]} {name[1]}: Age {age}:)
+    name: element.get__name()
+    birth_data = element.get_birth_data()
+    death_data = element.get_death_data()
+    birth_date = birth_data[0] if birth_data else None
+    death_data = death_data[0] if death_data else None
+    age = calculate_age(birth_date, death_date)
+    print(f"{name[0]} {name[1]}: Age {age}:)
