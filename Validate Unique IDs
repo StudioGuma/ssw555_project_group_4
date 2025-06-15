@@ -1,3 +1,15 @@
 from gedcom import Gedcom
 def validate_unique_ids(gedcom_file_path):
-gedcom_file = "
+  try:
+      g = Gedcom(gedcom_file_path)
+      elements_by_id = g.element_dict()
+      if len(elements_by_id) != len(g.element_list()):
+  except Exception as e:
+    print(f"Error with reading GEDCOM file: {e}")
+    return []
+gedcom_file = "ssw555_proj1.ged"
+duplicate_ids = validate_unique_ids(gedcom_file)
+if duplicate_ids:
+  print(f"Duplicate IDs found in GEDCOM file")
+else:
+  print("All IDs are unique in GEDCOM file")
