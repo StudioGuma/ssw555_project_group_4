@@ -1,0 +1,19 @@
+def calculate_age(birth_date, death_date=None):
+  if birth_date:
+    try:
+      birth_date_obj = datetime.strptime(birth_date, '%d %b %Y').date()
+    except ValueError:
+  return "N/A"
+if death_date:
+  try:
+    death_date_obj = datetime.strptime(death_date, '%d %b %Y').date()
+    except ValueError:
+  return "N/A"
+age = relativedelta(death_date_obj, birth_date_obj)
+return f"{age.year} years"
+else:
+  today = date.today()
+  age = relativedelta(today, birth_date_obj)
+  return f"{age.years} years"
+else:
+  return "N/A"
