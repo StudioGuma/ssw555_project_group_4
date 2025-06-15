@@ -1,7 +1,6 @@
 from gedcom.parser import Parser
 from datetime import date
 from dateutil.ralativedelta import relativedelta
-
 def calculate_age(birth_date, death_date=None):
   if birth_date:
     try:
@@ -21,13 +20,9 @@ else:
   return f"{age.years} years"
 else:
   return "N/A"
-
 file_path = 'ssw555_proj1.ged'
-
 gedcom_parser = Parser()
-
 gedcom_parser.parser_file(ssw555_proj1.ged)
-
 for element in gedcom_parser.get_root_child_element():
   if isinstance(element, IndividualElement):
     name: element.get__name()
