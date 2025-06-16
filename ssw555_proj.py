@@ -3,6 +3,7 @@
 from sys import *
 from enum import Enum
 from prettytable import PrettyTable
+from typing import NoReturn
 
 class Month(Enum):
 	JAN = 1
@@ -70,7 +71,7 @@ def cmp_dates(date1: str, date2: str) -> int:
 	if (is_valid_date_str(date1) and is_valid_date_str(date2)):
 		# return negative if date1 < date2, positive if date1 > date2, or 0 if date1 == date2
 		date1_split: list = date1.split()
-		date2.split: list = date2.split()
+		date2_split: list = date2.split()
 
 		day1: int = int(date1_split[0])
 		month1: int = Month[date1_split[1]].value
@@ -88,6 +89,31 @@ def cmp_dates(date1: str, date2: str) -> int:
 	else:
 		raise Exception(argv[0] + ": comparing invalid date string")
 
+def birth_before_parents_death(indi_table: list, fam_table: list) -> NoReturn:
+	# assumes that indi_table and fam_table are properly formatted
+	for fam in fam_table:
+		for indi in indi_table:
+			if (indi[0] == fam[2]):
+				husb_death: str = indi[4]
+			if (indi[0] == fam[3]):
+				wife_death: str = indi[4]
+			# husb_death and wife_death could still be "N/A"
+
+
+		for child in fam[4]:
+			for indi in indi_table:
+				if (indi[0] == child):
+					child_birth: str = indi[3]
+
+					if (child_birth != "N/A"):
+						if (husb_death != "N/A"):
+							if (cmp_dates(child_birth, husb_death) > 0):
+								raise Exception(argv[0] + ": " + child + " born after father's death")
+						if (wife_death != "N/A"):
+							if (cmp_dates(child_birth, wife_death) > 0):
+								raise Exception(argv[0] + ": " + child + " born after mother's death")
+					break
+
 def main() -> int:
 	try:
 		if (len(argv) != 2):
@@ -95,11 +121,13 @@ def main() -> int:
 		if (not argv[1].lower().endswith(".ged")):
 			raise Exception(argv[0] + ": input file is not a GEDCOM file (.ged)")
 
-		indi_table = PrettyTable()
-		indi_table.field_names = ["ID", "Name", "Gender", "Date of Birth", "Date of Death",
+		indi_table: list = []
+		indi_table_pretty = PrettyTable()
+		indi_table_pretty.field_names = ["ID", "Name", "Gender", "Date of Birth", "Date of Death",
 		"Child in", "Spouse in"]
-		fam_table = PrettyTable()
-		fam_table.field_names = ["ID", "Date of Marriage", "Husband", "Wife", "Children", "Date of Divorce"]
+		fam_table: list = []
+		fam_table_pretty = PrettyTable()
+		fam_table_pretty.field_names = ["ID", "Date of Marriage", "Husband", "Wife", "Children", "Date of Divorce"]
 
 		with open(argv[1], "r") as ged:
 			line: string = ged.readline()
@@ -125,14 +153,14 @@ def main() -> int:
 							match params[2]:
 								case "INDI":
 									if (cur_indi_row[0] != "N/A"):
-										indi_table.add_row(cur_indi_row)
+										indi_table.append(cur_indi_row)
 									cur_indi_row = ["N/A", "N/A", "N/A", "N/A", "N/A", [], []]
 
 									cur_indi_row[0] = params[1]
 
 								case "FAM":
 									if (cur_fam_row[0] != "N/A"):
-										fam_table.add_row(cur_fam_row)
+										fam_table.append(cur_fam_row)
 									cur_fam_row = ["N/A", "N/A", "N/A", "N/A", [], "N/A"]
 
 									cur_fam_row[0] = params[1]
@@ -196,11 +224,18 @@ def main() -> int:
 								is_div = False
 
 				line = ged.readline()
+
+		birth_before_parents_death(indi_table, fam_table)
+
+		for row in indi_table:
+			indi_table_pretty.add_row(row)
+		for row in fam_table:
+			fam_table_pretty.add_row(row)
 		
 		print("Individuals")
-		print(indi_table)
+		print(indi_table_pretty)
 		print("Families")
-		print(fam_table)
+		print(fam_table_pretty)
 
 		# US07: Individuals should be less than 150 years old
 		for row in indi_table._rows:
