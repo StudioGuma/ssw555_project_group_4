@@ -83,9 +83,7 @@ def cmp_dates(date1: str, date2: str) -> int:
 			return year1 - year2
 		elif (month1 != month2):
 			return month1 - month2
-		elif (day1 != day2):
-			return day1 - day2
-		return 0
+		return day1 - day2
 		
 	else:
 		raise Exception(argv[0] + ": comparing invalid date string")
