@@ -68,7 +68,7 @@ def is_valid_date_str(date: str) -> bool:
 
 def cmp_dates(date1: str, date2: str) -> int:
 	if (is_valid_date_str(date1) and is_valid_date_str(date2)):
-		# return negative if date1 < date2, positive if date1 > date2, or 0 if date1 - date2
+		# return negative if date1 < date2, positive if date1 > date2, or 0 if date1 == date2
 		date1_split: list = date1.split()
 		date2.split: list = date2.split()
 
