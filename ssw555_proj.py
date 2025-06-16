@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from sys import *
+from enum import Enum
 from prettytable import PrettyTable
 
 class Month(Enum):
