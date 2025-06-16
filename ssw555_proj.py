@@ -57,33 +57,6 @@ def is_valid_date_str(date: str) -> bool:
 		day: int = int(date_split[0])
 
 		month: int = Month[date_split[1]].value
-		# match date_split[1]:
-			# case "JAN":
-			# 	month = 1
-			# case "FEB":
-			# 	month = 2
-			# case "MAR":
-			# 	month = 3
-			# case "APR":
-			# 	month = 4
-			# case "MAY":
-			# 	month = 5
-			# case "JUN":
-			# 	month = 6
-			# case "JUL":
-			# 	month = 7
-			# case "AUG":
-			# 	month = 8
-			# case "SEP":
-			# 	month = 9
-			# case "OCT":
-			# 	month = 10
-			# case "NOV":
-			# 	month = 11
-			# case "DEC":
-			# 	month = 12
-			# case _:
-			# 	return False
 
 		year: int = int(date_split[2])
 
@@ -95,13 +68,25 @@ def is_valid_date_str(date: str) -> bool:
 
 def cmp_dates(date1: str, date2: str) -> int:
 	if (is_valid_date_str(date1) and is_valid_date_str(date2)):
-		# return -1 if date1 < date2, 1 if date1 > date2, or 0 if date1 - date2
+		# return negative if date1 < date2, positive if date1 > date2, or 0 if date1 - date2
 		date1_split: list = date1.split()
 		date2.split: list = date2.split()
 
+		day1: int = int(date1_split[0])
+		month1: int = Month[date1_split[1]].value
+		year1: int = int(date1_split[2])
+		day2: int = int(date2_split[0])
+		month2: int = Month[date2_split[1]].value
+		year2: int = int(date2_split[2])
 
-
+		if (year1 != year2):
+			return year1 - year2
+		elif (month1 != month2):
+			return month1 - month2
+		elif (day1 != day2):
+			return day1 - day2
 		return 0
+		
 	else:
 		raise Exception(argv[0] + ": comparing invalid date string")
 
