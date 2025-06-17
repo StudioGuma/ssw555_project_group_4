@@ -146,6 +146,48 @@ def birth_before_parents_death(indi_table: list, fam_table: list) -> NoReturn:
 							if (cmp_dates(child_birth, wife_death) > 0):
 								raise Exception(argv[0] + ": " + child + " born after mother's death")
 					break
+def less_than_150_years_old(indi_table: list) -> None:
+	for indi in indi_table:
+		birth = indi[3] 
+		death = indi[4]
+
+		if birth == "N/A":
+			continue
+			
+		birth_parts = birth.split()
+		if len(birth_parts) != 3 or not birth_parts[2].isdigit():
+			continue
+
+		birth_year = int(birth_parts[2])
+
+		if death != "N/A":
+			death_parts = death.split()
+			if len(death_parts) != 3 or not death_parts[2].isdigit():
+				continue
+			death_year = int(death_parts[2])
+
+			if (death_year - birth_year) > 150:
+				print("US07: ERROR –", indi[0], "lived more than 150 years")
+
+def birth_after_marriage_and_before_divorce(indi_table: list, fam_table: list) -> None:
+    for fam in fam_table:
+        marr = fam[1]
+        div = fam[5]
+
+        for child in fam[4]:
+            for indi in indi_table:
+                if indi[0] == child and indi[3] != "N/A":
+                    birth = indi[3]
+
+                    birth_parts = birth.split()
+                    if len(birth_parts) != 3 or not birth_parts[2].isdigit():
+                        continue
+
+                    if marr != "N/A" and cmp_dates(birth, marr) < 0:
+                        print(f"ERROR: US08: {child} born before parents' marriage")
+
+                    if div != "N/A" and cmp_dates(birth, div) > 0:
+                        print(f"ERROR: US08: {child} born after parents' divorce")
 
 def main() -> int:
 	try:
@@ -261,6 +303,8 @@ def main() -> int:
 		birth_before_death(indi_table)
 		marriage_before_death(indi_table, fam_table)
 		birth_before_parents_death(indi_table, fam_table)
+		less_than_150_years_old(indi_table)
+		birth_after_marriage_and_before_divorce(indi_table, fam_table)
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)
