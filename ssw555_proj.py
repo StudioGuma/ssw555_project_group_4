@@ -316,33 +316,6 @@ def main() -> int:
 		print("Families")
 		print(fam_table_pretty)
 
-		# US07: Individuals should be less than 150 years old
-		for row in indi_table._rows:
-			id_, name, _, birth, death, _, _ = row
-			birth_date = parse_date(birth)
-			death_date = parse_date(death) or datetime.today()
-			if birth_date and (
-				death_date.year - birth_date.year > 150 or
-				(death_date.year - birth_date.year == 150 and death_date.month > birth_date.month) or
-				(death_date.year - birth_date.year == 150 and death_date.month == birth_date.month and death_date.day > birth_date.day)
-			):
-				print(f"ERROR: US07: {name} ({id_}) lived more than 150 years.")
-
-		# US08: Child birth before marriage and after divorce check
-		indi_births = {row[0]: parse_date(row[3]) for row in indi_table._rows}
-		for row in fam_table._rows:
-			fam_id, marr, _, _, children, div = row
-			marr_date = parse_date(marr)
-			div_date = parse_date(div)
-
-			for child in children:
-				birth = indi_births.get(child)
-				if birth:
-					if marr_date and birth < marr_date:
-						print(f"ERROR: US08: Family {fam_id}: Child {child} born before marriage.")
-					if div_date and birth > div_date:
-						print(f"ERROR: US08: Family {fam_id}: Child {child} born after divorce.")
-
 	except Exception as e:
 		print(e, file=stderr)
 		return 1
