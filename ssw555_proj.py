@@ -4,6 +4,7 @@ from sys import *
 from enum import Enum
 from prettytable import PrettyTable
 from typing import NoReturn
+from datetime import datetime
 
 class Month(Enum):
 	JAN = 1
@@ -18,6 +19,13 @@ class Month(Enum):
 	OCT = 10
 	NOV = 11
 	DEC = 12
+
+
+def parse_date(date_str):
+	try:
+		return datetime.strptime(date_str, "%d %b %Y")
+	except:
+		return None
 
 def is_valid_tag(level: int, tag: str) -> bool:
 	match level:
@@ -88,6 +96,31 @@ def cmp_dates(date1: str, date2: str) -> int:
 		
 	else:
 		raise Exception(argv[0] + ": comparing invalid date string")
+
+def birth_before_death(indi_table: list) -> None:
+	for row in indi_table:
+		id_, name, _, birth, death, _, _ = row
+		birth_date = parse_date(birth)
+		death_date = parse_date(death)
+		if birth_date and death_date and birth_date > death_date:
+			print(f"ERROR: US01: {name} ({id_}) born after death.")
+
+def marriage_before_death(indi_table: list, fam_table: list) -> None:
+	id_to_death = {row[0]: row[4] for row in indi_table}
+	id_to_name = {row[0]: row[1] for row in indi_table}
+
+	for row in fam_table:
+		fam_id, marriage, husb, wife, _, _ = row
+		marriage_date = parse_date(marriage)
+		husb_death = parse_date(id_to_death.get(husb))
+		wife_death = parse_date(id_to_death.get(wife))
+
+		if marriage_date and husb_death and marriage_date > husb_death:
+			print(f"ERROR: US02: Family {fam_id}: Marriage occurs after death of husband {id_to_name.get(husb)} ({husb})")
+		if marriage_date and wife_death and marriage_date > wife_death:
+			print(f"ERROR: US02: Family {fam_id}: Marriage occurs after death of wife {id_to_name.get(wife)} ({wife})")
+
+
 
 def birth_before_parents_death(indi_table: list, fam_table: list) -> NoReturn:
 	# assumes that indi_table and fam_table are properly formatted
@@ -225,6 +258,8 @@ def main() -> int:
 
 				line = ged.readline()
 
+		birth_before_death(indi_table)
+		marriage_before_death(indi_table, fam_table)
 		birth_before_parents_death(indi_table, fam_table)
 
 		for row in indi_table:
