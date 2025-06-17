@@ -1,15 +1,17 @@
-from gedcom import Gedcom
-def validate_unique_ids(gedcom_file_path):
-  try:
-      g = Gedcom(gedcom_file_path)
-      elements_by_id = g.element_dict()
-      if len(elements_by_id) != len(g.element_list()):
-  except Exception as e:
-    print(f"Error with reading GEDCOM file: {e}")
-    return []
-gedcom_file = "ssw555_proj1.ged"
-duplicate_ids = validate_unique_ids(gedcom_file)
+from ged4py import GedcomReader
+file_path = "C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged" # Replace with your file path
+encountered_ids = set()
+duplicate_ids = []
+with GedcomReader(file_path) as parser:
+    for record in parser.records0():
+        if record.xref_id:  # Check if record has an ID
+            if record.xref_id in encountered_ids:
+                duplicate_ids.append(record.xref_id)
+            else:
+                encountered_ids.add(record.xref_id)
 if duplicate_ids:
-  print(f"Duplicate IDs found in GEDCOM file")
+    print("Duplicate IDs found.")
+    for duplicate_id in duplicate_ids:
+        print(duplicate_id)
 else:
-  print("All IDs are unique in GEDCOM file")
+    print("These are unique IDs.")
