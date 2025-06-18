@@ -1,0 +1,35 @@
+from gedcom.element.individual import IndividualElement
+from gedcom.parser import Parser
+from datetime import datetime, timedelta
+
+def list_of_recent_births(gedcom_file_path, age_cut_off=25): # You can change the age for recent births here
+
+    gedcom_parser = Parser()
+
+    gedcom_parser.parse_file(gedcom_file_path)
+
+    root_child_elements = gedcom_parser.get_root_child_elements()
+
+    current_date = datetime.now()
+    threshold_date = current_date - timedelta(days=age_cut_off * 365)
+
+    print(f"Individuals born within the last {age_cut_off} years:")
+
+    for element in root_child_elements:
+
+        if isinstance(element, IndividualElement):
+            birth_data = element.get_birth_data()
+
+            if birth_data and birth_data[0]:
+                try:
+                    birth_date = datetime.strptime(birth_data[0], "%d %b %Y")
+
+                    if birth_date > threshold_date:
+                        name = element.get_name()
+                        print(f"- {name[0]} {name[1]} (Born: {birth_data[0]})")
+                except ValueError:
+
+                    print(f"Could not parse birth date for individual {element.get_name()}: {birth_data[0]}")
+
+gedcom_file = "C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged"  # Replace with the path to your GEDCOM file
+list_of_recent_births(gedcom_file)
