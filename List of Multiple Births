@@ -1,0 +1,29 @@
+from gedcom.parser import Parser
+from gedcom.element.individual import IndividualElement
+from gedcom.element.family import FamilyElement
+
+file_path = "C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged" # Replace with the path to your GEDCOM file
+
+gedcom_parser = Parser()
+gedcom_parser.parse_file(file_path)
+
+families = gedcom_parser.get_root_child_elements()
+
+print("LIst of Families with Multiple Births:")
+
+for element in families:
+    if isinstance(element, FamilyElement):
+
+        children = gedcom_parser.get_family_members(element, members_type="CHIL")
+
+        if len(children) > 1:
+
+            parents = gedcom_parser.get_family_members(element, members_type="PARENTS")
+
+            parent_names = []
+            for parent in parents:
+                if isinstance(parent, IndividualElement):
+                    given_name, surname = parent.get_name()
+                    parent_names.append(f"{given_name} {surname}")
+
+            print(f"  Parents: {' & '.join(parent_names)} - Children: {len(children)}")
