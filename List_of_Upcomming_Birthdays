@@ -1,0 +1,45 @@
+from gedcom.element.individual import IndividualElement
+from gedcom.parser import Parser
+import datetime
+
+def list_of_upcoming_birthdays(file_path, birthday_comming_up=90): # Replace with the desire number of days until upcomming birthday
+
+    gedcom_parser = Parser()
+
+    gedcom_parser.parse_file(file_path, strict=True)
+
+    individuals = gedcom_parser.get_root_child_elements()
+
+    today = datetime.date.today()
+    future_date = today + datetime.timedelta(days=birthday_comming_up)
+
+    print(f"List of Upcoming Birthdays in the next {birthday_comming_up} days:")
+
+    for individual in individuals:
+
+        if isinstance(individual, IndividualElement):
+            birth_data = individual.get_birth_data()
+
+            if birth_data and birth_data[0]:
+                try:
+
+                    birth_date_str = birth_data[0]
+
+                    birthday = datetime.datetime.strptime(birth_date_str, "%d %b %Y").date()
+
+                    next_birthday_year = today.year
+                    if (today.month, today.day) > (birthday.month, birthday.day):
+                        next_birthday_year += 1
+
+                    next_birthday = datetime.date(next_birthday_year, birthday.month, birthday.day)
+
+                    if today <= next_birthday <= future_date:
+                        name = individual.get_name()
+                        print(f"- {name[0]} {name[1]}'s birthday is on {next_birthday.strftime('%B %d, %Y')}")
+
+                except ValueError:
+
+                    name = individual.get_name()
+                    print(f"- Could not find birth date for {name[0]} {name[1]}: {birth_data[0]}")
+
+list_of_upcoming_birthdays("C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged") # Replace with the path to your GEDCOM file
