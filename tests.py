@@ -21,13 +21,13 @@ class Tests(unittest.TestCase):
 		self.assertFalse(is_valid_date_str("29 FEB 2023"))
 		self.assertFalse(is_valid_date_str("31 APR 2100"))
 
-		test_indi_table: list = [
-			["@I1@", "Mr. Fakename", "M", "1 JAN 2000", "N/A", [], ["@F1@"]],
-			["@I2@", "Mrs. Fakename", "F", "2 JAN 1999", "N/A", [], ["@F1@"]]
-		]
-		test_fam_table: list = [
-			["@F1@", "13 APR 2013", "@I1", "@I2", [], "N/A"]
-		]
+	test_indi_table: list = [
+		["@I1@", "Mr. Fakename", "M", "1 JAN 2000", "N/A", [], ["@F1@"]],
+		["@I2@", "Mrs. Fakename", "F", "2 JAN 1999", "N/A", [], ["@F1@"]]
+	]
+	test_fam_table: list = [
+		["@F1@", "13 APR 2013", "@I1", "@I2", [], "N/A"]
+	]
 
 	def test_marriage_after_14(self):
 		self.assertRaises(Exception, marriage_after_14(test_indi_table, test_fam_table))
