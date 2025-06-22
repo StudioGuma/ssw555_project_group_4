@@ -1,0 +1,73 @@
+from datetime import datetime, timedelta
+from gedcom.element.individual import IndividualElement
+from gedcom.parser import Parser
+
+def find_recent_deaths_and_descendants(gedcom_file_path):
+
+    gedcom_parser = Parser()
+
+    gedcom_parser.parse_file(gedcom_file_path)
+
+    root_child_elements = gedcom_parser.get_root_child_elements()
+
+    thirty_days_ago = datetime.now() - timedelta(days=30)
+
+    recent_deaths_with_descendants = {}
+
+    for element in root_child_elements:
+
+        if isinstance(element, IndividualElement):
+
+            death_data = element.get_death_data()
+
+            if death_data and death_data[0]:
+                try:
+
+                    death_date = datetime.strptime(death_data[0], "%d %b %Y")
+
+                    if death_date >= thirty_days_ago:
+
+                        individual_name = element.get_name()
+
+                        descendants_list = find_descendants(element, gedcom_parser)
+
+                        recent_deaths_with_descendants[f"{individual_name[0]} {individual_name[1]}"] = descendants_list
+
+                except ValueError:
+
+                    print(f"Could not find death date: {death_data[0]}")
+
+    return recent_deaths_with_descendants
+
+def find_descendants(individual, parser):
+
+    descendants = []
+
+    families = parser.get_families(individual, family_type="FAMS")
+
+    for family in families:
+
+        children = parser.get_family_members(family, members_type="CHIL")
+        for child in children:
+            child_name = child.get_name()
+            descendants.append(f"{child_name[0]} {child_name[1]}")
+
+            descendants.extend(find_descendants(child, parser))
+
+    return descendants
+
+gedcom_file = "C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged" # Replace with the path to your GEDCOM file
+recent_deaths = find_recent_deaths_and_descendants(gedcom_file)
+
+if recent_deaths:
+    print("List of Individuals who Died in the Last 30 days and their Spouses and Descendants:")
+    for deceased, descendants in recent_deaths.items():
+        print(f"\nDeceased: {deceased}")
+        if descendants:
+            print("Descendants:")
+            for descendant in descendants:
+                print(f"- {descendant}")
+        else:
+            print("No spouses and descendants found.")
+else:
+    print("No individuals found who died in the last 30 days.")
