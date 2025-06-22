@@ -206,6 +206,20 @@ def birth_after_marriage_and_before_divorce(indi_table: list, fam_table: list) -
                     if div != "N/A" and cmp_dates(birth, div) > 0:
                         print(f"ERROR: US08: {child} born after parents' divorce")
 
+def get_age_at_date(birth: str, date: str) -> int:
+	b_day, b_month, b_year = birth.split()
+	d_day, d_month, d_year = date.split()
+
+	b_day, b_month, b_year = int(b_day), Month[b_month].value, int(b_year)
+	d_day, d_month, d_year = int(d_day), Month[d_month].value, int(d_year)
+
+	age = d_year - b_year
+
+	if (b_month > d_month) or (d_month == b_month and b_day > d_day):
+		age -= 1
+	
+	return age
+
 def marriage_after_14(indi_table: list, fam_table: list) -> None:
 	for fam in fam_table:
 		marr_date: str = fam[1]
@@ -218,12 +232,30 @@ def marriage_after_14(indi_table: list, fam_table: list) -> None:
 			husb: str = fam[2]
 			wife: str = fam[3]
 
+			husb_birth: str = "N/A"
+			wife_birth: str = "N/A"
+
 		for indi in indi_table:
 			if (husb != "N/A" and indi[0] == husb):
 				husb_birth: str = indi[3]
 
 			if (wife != "N/A" and indi[0] == wife):
 				wife_birth: str = indi[3]
+		
+
+		if (husb_birth != "N/A"):
+			age = get_age_at_date(husb_birth, marr_date)
+
+			if (age < 14):
+				print(f"ERROR: In family {fam[0]}: Husband {husb} was married before the age of 14.")
+		
+		if (wife_birth != "N/A"):
+			age = get_age_at_date(wife_birth, marr_date)
+
+			if (age < 14):
+				print(f"ERROR: In family {fam[0]}: Wife {wife} was married before the age of 14.")
+
+			
 
 def main() -> int:
 	try:

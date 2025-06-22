@@ -30,7 +30,7 @@ class Tests(unittest.TestCase):
 	]
 
 	def test_marriage_after_14(self):
-		self.assertRaises(Exception, marriage_after_14(test_indi_table, test_fam_table))
+		self.assertRaises(Exception, marriage_after_14(self.test_indi_table, self.test_fam_table))
 
 if __name__ == "__main__":
 	unittest.main(verbosity=2)
