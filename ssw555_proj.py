@@ -3,8 +3,7 @@
 from sys import *
 from enum import Enum
 from prettytable import PrettyTable
-from typing import NoReturn
-from datetime import datetime
+from datetime import datetime, date
 
 class Month(Enum):
 	JAN = 1
@@ -19,7 +18,6 @@ class Month(Enum):
 	OCT = 10
 	NOV = 11
 	DEC = 12
-
 
 def parse_date(date_str):
 	try:
@@ -120,9 +118,7 @@ def marriage_before_death(indi_table: list, fam_table: list) -> None:
 		if marriage_date and wife_death and marriage_date > wife_death:
 			print(f"ERROR: US02: Family {fam_id}: Marriage occurs after death of wife {id_to_name.get(wife)} ({wife})")
 
-
-
-def birth_before_parents_death(indi_table: list, fam_table: list) -> NoReturn:
+def birth_before_parents_death(indi_table: list, fam_table: list) -> None:
 	# assumes that indi_table and fam_table are properly formatted
 	for fam in fam_table:
 		for indi in indi_table:
@@ -146,6 +142,27 @@ def birth_before_parents_death(indi_table: list, fam_table: list) -> NoReturn:
 							if (cmp_dates(child_birth, wife_death) > 0):
 								raise Exception(argv[0] + ": " + child + " born after mother's death")
 					break
+
+def list_recent_births(indi_table: list) -> None:
+	print("Recent births")
+	# Assumes valid date string
+
+	for indi in indi_table:
+		birth: str = indi[3]
+
+		if (birth != "N/A"):
+			date_split: list = birth.split()
+			day: int = int(date_split[0])
+			month: int = Month[date_split[1]].value
+			year: int = int(date_split[2])
+
+			birth_date = datetime(year, month, day)
+			delta = datetime.now() - birth_date
+			if (delta.days < 31):
+				print(indi[0] + ": " + indi[1])
+
+	print("")
+
 def less_than_150_years_old(indi_table: list) -> None:
 	for indi in indi_table:
 		birth = indi[3] 
@@ -310,6 +327,8 @@ def main() -> int:
 			indi_table_pretty.add_row(row)
 		for row in fam_table:
 			fam_table_pretty.add_row(row)
+
+		list_recent_births(indi_table)
 		
 		print("Individuals")
 		print(indi_table_pretty)
