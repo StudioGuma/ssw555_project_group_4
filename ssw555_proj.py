@@ -189,6 +189,24 @@ def birth_after_marriage_and_before_divorce(indi_table: list, fam_table: list) -
                     if div != "N/A" and cmp_dates(birth, div) > 0:
                         print(f"ERROR: US08: {child} born after parents' divorce")
 
+def list_living_married(indi_table: list, fam_table: list) -> list:
+	living_married = []
+	married_set=set()
+	result=[]
+
+
+	for fam in fam_table:
+		husb_id = fam[2]
+		wife_id = fam[3]
+		marriage_date=fam[1]
+		divorce_date=fam[5]
+
+		if husb_id and wife_id and marriage_date != "N/A" and divorce_date =="N/A":
+			married_set.add(husb_id)
+			married_set.add(wife_id)
+
+	
+
 def main() -> int:
 	try:
 		if (len(argv) != 2):
@@ -305,6 +323,7 @@ def main() -> int:
 		birth_before_parents_death(indi_table, fam_table)
 		less_than_150_years_old(indi_table)
 		birth_after_marriage_and_before_divorce(indi_table, fam_table)
+		list_living_married(indi_table, fam_table)
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)
