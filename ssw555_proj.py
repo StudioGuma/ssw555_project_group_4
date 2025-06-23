@@ -205,7 +205,16 @@ def list_living_married(indi_table: list, fam_table: list) -> list:
 			married_set.add(husb_id)
 			married_set.add(wife_id)
 
-	
+	for indi in indi_table:
+        if indi[0] in married_set and indi[4]=="N/A":
+            living_married.append((indi[0], indi[1]))
+        
+    if living_married:
+        print("\nLiving Married Individuals:")
+        for indi_id, name in living_married:
+            print(f"{indi_id}: {name}")
+
+    return living_married 
 
 def main() -> int:
 	try:

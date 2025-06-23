@@ -38,7 +38,14 @@ class Tests(unittest.TestCase):
 		result=list_living_married(indi_table, fam_table)
 		self.assertEqual(result, expected)
 
-	
+	def test_list_living_married(self):
+        indi_table = [
+            ["@I5@", "Unmarried Alice", "F", "01 JAN 1990", "N/A", [], []]
+        ]
+        fam_table=[]
+        result=list_living_married(indi_table, fam_table)
+        self.assertEqual(result, [])
+
 
 if __name__ == "__main__":
 	unittest.main(verbosity=2)
