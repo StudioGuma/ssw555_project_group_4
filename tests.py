@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import unittest
-from ssw555_proj import is_valid_date_str, list_living_married
+from ssw555_proj import is_valid_date_str, list_living_married, list_orphans
 
 class Tests(unittest.TestCase):
 	def test_valid_date_positives(self):
@@ -39,13 +39,27 @@ class Tests(unittest.TestCase):
 		self.assertEqual(result, expected)
 
 	def test_list_living_married(self):
-        indi_table = [
-            ["@I5@", "Unmarried Alice", "F", "01 JAN 1990", "N/A", [], []]
-        ]
-        fam_table=[]
-        result=list_living_married(indi_table, fam_table)
-        self.assertEqual(result, [])
+		indi_table = [
+			["@I5@", "Unmarried Alice", "F", "01 JAN 1990", "N/A", [], []]
+		]
+		fam_table = []
+		result = list_living_married(indi_table, fam_table)
+		self.assertEqual(result, [])
 
+	def test_list_orphans(self):
+		indi_table = [
+			["@I1@", "Orphan Joe", "M", "01 JAN 2010", "N/A", ["@F1@"], []],
+			["@I2@", "Mom", "F", "01 JAN 1980", "01 JAN 2020", [], ["@F1@"]],
+			["@I3@", "Dad", "M", "01 JAN 1979", "01 JAN 2019", [], ["@F1@"]],
+		]
+
+		fam_table = [
+			["@F1@", "01 JAN 2005", "@I3@", "@I2@", ["@I1@"], "N/A"]
+		]
+
+		expected = [("@I1@", "Orphan Joe")]
+		result = list_orphans(indi_table, fam_table)
+		self.assertEqual(result, expected)
 
 if __name__ == "__main__":
 	unittest.main(verbosity=2)

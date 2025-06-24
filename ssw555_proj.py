@@ -190,31 +190,63 @@ def birth_after_marriage_and_before_divorce(indi_table: list, fam_table: list) -
                         print(f"ERROR: US08: {child} born after parents' divorce")
 
 def list_living_married(indi_table: list, fam_table: list) -> list:
-	living_married = []
-	married_set=set()
-	result=[]
+    living_married = []
+    married_set = set()
 
+    for fam in fam_table:
+        husb_id = fam[2]
+        wife_id = fam[3]
+        marriage_date = fam[1]
+        divorce_date = fam[5]
 
-	for fam in fam_table:
-		husb_id = fam[2]
-		wife_id = fam[3]
-		marriage_date=fam[1]
-		divorce_date=fam[5]
+        if husb_id and wife_id and marriage_date != "N/A" and divorce_date == "N/A":
+            married_set.add(husb_id)
+            married_set.add(wife_id)
 
-		if husb_id and wife_id and marriage_date != "N/A" and divorce_date =="N/A":
-			married_set.add(husb_id)
-			married_set.add(wife_id)
-
-	for indi in indi_table:
-        if indi[0] in married_set and indi[4]=="N/A":
+    for indi in indi_table:
+        if indi[0] in married_set and indi[4] == "N/A":
             living_married.append((indi[0], indi[1]))
-        
+
     if living_married:
         print("\nLiving Married Individuals:")
         for indi_id, name in living_married:
             print(f"{indi_id}: {name}")
 
-    return living_married 
+    return living_married
+
+def list_orphans(indi_table: list, fam_table: list) -> list:
+    orphans = []
+    id_to_parents = {indi[0]: [] for indi in indi_table}
+    id_to_birth = {indi[0]: indi[3] for indi in indi_table}
+    id_to_death = {indi[0]: indi[4] for indi in indi_table}
+
+    for fam in fam_table:
+        for child_id in fam[4]:  
+            if fam[2] != "N/A":
+                id_to_parents[child_id].append(fam[2])  
+            if fam[3] != "N/A":
+                id_to_parents[child_id].append(fam[3])  
+
+    for indi in indi_table:
+        indi_id, name, gender, birth, death, famc, _ = indi
+        if death != "N/A":
+            continue 
+
+        birth_parts = birth.split()
+        if len(birth_parts) != 3 or not birth_parts[2].isdigit():
+            continue
+
+        birth_year = int(birth_parts[2])
+        if birth_year >= datetime.now().year - 18:
+            parents = id_to_parents.get(indi_id, [])
+            if all(id_to_death.get(pid, "N/A") != "N/A" for pid in parents):
+                orphans.append((indi_id, name))
+
+    if orphans:
+        print("\nOrphans (US16):")
+        for oid, name in orphans:
+            print(f"{oid}: {name}")
+    return orphans
 
 def main() -> int:
 	try:
@@ -333,6 +365,7 @@ def main() -> int:
 		less_than_150_years_old(indi_table)
 		birth_after_marriage_and_before_divorce(indi_table, fam_table)
 		list_living_married(indi_table, fam_table)
+		list_orphans(indi_table, fam_table)
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)
