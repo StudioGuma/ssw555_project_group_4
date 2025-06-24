@@ -212,7 +212,13 @@ def list_living_married(indi_table: list, fam_table: list) -> list:
         for indi_id, name in living_married:
             print(f"{indi_id}: {name}")
 
-    return living_married
+     return living_married tests.py: def test_list_living_married(self):
+        indi_table = [
+            ["@I5@", "Unmarried Alice", "F", "01 JAN 1990", "N/A", [], []]
+        ]
+        fam_table=[]
+        result=list_living_married(indi_table, fam_table)
+        self.assertEqual(result, [])
 
 def list_orphans(indi_table: list, fam_table: list) -> list:
     orphans = []
