@@ -1,0 +1,58 @@
+ERROR: US09: Family @F2@: Wife @I7@ is married to descendant @I1@
+ERROR: US09: Family @F4@: Wife @I3@ is married to descendant @I2@
+ERROR: US09: Family @F5@: Husband @I2@ is married to descendant @I5@
+ERROR: US09: Family @F99@: Husband @I1@ is married to descendant @I9@
+ERROR: US09: Family @F99@: Wife @I9@ is married to descendant @I1@
+ERROR: US09: Family @F1@: Husband @I1@ is married to descendant @I9@
+ERROR: US09: Family @F1@: Wife @I9@ is married to descendant @I1@
+ERROR: US09: Family @F2@: Husband @I3@ is married to descendant @I2@
+ERROR: US09: Family @F3@: Husband @I1@ is married to descendant @I9@
+ERROR: US09: Family @F3@: Wife @I9@ is married to descendant @I1@
+ERROR: US09: Family @F99@: Husband @I1@ is married to descendant @I9@
+ERROR: US09: Family @F99@: Wife @I9@ is married to descendant @I1@
+ERROR: US10: Family @F4@: Siblings @I4@ and @I5@ are married.
+Individuals
++-------+----------------------------+--------+---------------+---------------+----------+--------------------------+
+|   ID  |            Name            | Gender | Date of Birth | Date of Death | Child in |        Spouse in         |
++-------+----------------------------+--------+---------------+---------------+----------+--------------------------+
+|  @I1@ |   James Paul /McCartney/   |   M    |  18 JUN 1942  |      N/A      | ['@F4@'] | ['@F1@', '@F2@', '@F3@'] |
+|  @I2@ |     James /McCartney/      |   M    |   1 JAN 1902  |   1 JAN 1976  |    []    |     ['@F4@', '@F5@']     |
+|  @I3@ |   Mary Patricia /Mohin/    |   F    |   1 JAN 1909  |   1 JAN 1956  |    []    |         ['@F4@']         |
+|  @I4@ | Peter Michael /McCartney/  |   M    |   7 JAN 1944  |      N/A      | ['@F4@'] |            []            |
+|  @I5@ |     Angie /McCartney/      |   F    |      N/A      |      N/A      |    []    |         ['@F5@']         |
+|  @I6@ |      Ruth /McCartney/      |   F    |      N/A      |      N/A      | ['@F5@'] |            []            |
+|  @I7@ |   Linda Louise /Eastman/   |   F    |  24 SEP 1941  |  17 APR 1998  | ['@F7@'] |     ['@F2@', '@F6@']     |
+|  @I8@ |  Heather Louise McCartney  |   F    |  31 DEC 1962  |      N/A      | ['@F2@'] |            []            |
+|  @I9@ |   Mary Anna /McCartney/    |   F    |  28 AUG 1969  |      N/A      | ['@F2@'] |            []            |
+| @I10@ |   Leopold Vail /Eastman/   |   M    |  12 JAN 1910  |  30 JUL 1991  |    []    |         ['@F7@']         |
+| @I11@ |      Louise /Lindner/      |   F    |      N/A      |   1 JAN 1962  |    []    |         ['@F7@']         |
+| @I12@ |  Stella Nina /McCartney/   |   F    |  13 SEP 1971  |      N/A      | ['@F2@'] |            []            |
+| @I13@ |  James Louis /McCartney/   |  N/A   |  12 SEP 1977  |      N/A      | ['@F2@'] |            []            |
+| @I14@ |    Heather Anne /Mills/    |   F    |  12 JAN 1968  |      N/A      |    []    |         ['@F3@']         |
+| @I15@ | Beatrice Milly /McCartney/ |   F    |  28 OCT 2003  |      N/A      | ['@F3@'] |            []            |
+| @I16@ |      Nancy /Shevell/       |   F    |  20 NOV 1959  |      N/A      |    []    |         ['@F1@']         |
+|  @I1@ |      John /Ancestor/       |   M    |   1 JAN 1950  |      N/A      |    []    |         ['@F1@']         |
+|  @I2@ |     Alice /Descendant/     |   F    |   1 JAN 1980  |      N/A      | ['@F1@'] |         ['@F2@']         |
+|  @I2@ |     Alice /Descendant/     |   F    |   1 JAN 1980  |      N/A      | ['@F1@'] |         ['@F2@']         |
+|  @I2@ |     Alice /Descendant/     |   F    |   1 JAN 1980  |      N/A      | ['@F1@'] |         ['@F2@']         |
+|  @I3@ |      John /Ancestor/       |   M    |   1 JAN 1950  |      N/A      |    []    |         ['@F2@']         |
+|  @I4@ |       Tom /Sibling/        |   M    |   1 JAN 1985  |      N/A      | ['@F3@'] |         ['@F4@']         |
++-------+----------------------------+--------+---------------+---------------+----------+--------------------------+
+Families
++-------+------------------+---------+-------+------------------------------------+-----------------+
+|   ID  | Date of Marriage | Husband |  Wife |              Children              | Date of Divorce |
++-------+------------------+---------+-------+------------------------------------+-----------------+
+|  @F1@ |       N/A        |   @I1@  | @I16@ |                 []                 |       N/A       |
+|  @F2@ |       N/A        |   @I1@  |  @I7@ | ['@I8@', '@I9@', '@I12@', '@I13@'] |       N/A       |
+|  @F3@ |       N/A        |   @I1@  | @I14@ |             ['@I15@']              |   18 FEB 2008   |
+|  @F4@ |       N/A        |   @I2@  |  @I3@ |          ['@I1@', '@I4@']          |       N/A       |
+|  @F5@ |       N/A        |   @I2@  |  @I5@ |              ['@I6@']              |       N/A       |
+|  @F6@ |       N/A        |   N/A   |  @I7@ |                 []                 |       N/A       |
+|  @F7@ |       N/A        |  @I10@  | @I11@ |              ['@I7@']              |       N/A       |
+| @F99@ |    1 JAN 2020    |   @I1@  |  @I9@ |                 []                 |       N/A       |
+|  @F1@ |       N/A        |   @I1@  |  @I9@ |              ['@I2@']              |       N/A       |
+|  @F2@ |    1 JAN 2000    |   @I3@  |  @I2@ |                 []                 |       N/A       |
+|  @F3@ |       N/A        |   @I1@  |  @I9@ |          ['@I4@', '@I5@']          |       N/A       |
+|  @F4@ |    1 JAN 2010    |   @I4@  |  @I5@ |                 []                 |       N/A       |
+| @F99@ |    1 JAN 2020    |   @I1@  |  @I9@ |                 []                 |       N/A       |
++-------+------------------+---------+-------+------------------------------------+-----------------+
