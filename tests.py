@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import unittest
-from ssw555_proj import is_valid_date_str, marriage_after_14
+from ssw555_proj import *
 
 class Tests(unittest.TestCase):
 	def test_valid_date_positives(self):
@@ -28,9 +28,18 @@ class Tests(unittest.TestCase):
 	test_fam_table: list = [
 		["@F1@", "13 APR 2013", "@I1", "@I2", [], "N/A"]
 	]
+	test_indi_table2: list = [
+		["@I1@", "Mr. Fakename", "M", "1 JAN 1940", "2 FEB 1990", [], ["@F1@"]],
+		["@I2@", "Mrs. Fakename", "F", "2 JAN 1941", "2 FEB 1990", [], ["@F1@"]],
+		["@I3@", "Mrs. Fakename Jr.", "F", "2 MAR 1990", "N/A", [], "@F1@"]
+	]
+	test_fam_table2: list = [
+		["@F1@", "13 APR 1970", "@I1@", "@I2@", ["@I3"], "N/A"]
+	]
 
-	def test_marriage_after_14(self):
+	def test_exceptions(self):
 		self.assertRaises(Exception, marriage_after_14(self.test_indi_table, self.test_fam_table))
+		self.assertRaises(Exception, birth_before_parents_death(self.test_indi_table2, self.test_fam_table2))
 
 if __name__ == "__main__":
 	unittest.main(verbosity=2)

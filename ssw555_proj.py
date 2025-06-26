@@ -235,25 +235,25 @@ def marriage_after_14(indi_table: list, fam_table: list) -> None:
 			husb_birth: str = "N/A"
 			wife_birth: str = "N/A"
 
-		for indi in indi_table:
-			if (husb != "N/A" and indi[0] == husb):
-				husb_birth: str = indi[3]
+			for indi in indi_table:
+				if (husb != "N/A" and indi[0] == husb):
+					husb_birth: str = indi[3]
 
-			if (wife != "N/A" and indi[0] == wife):
-				wife_birth: str = indi[3]
-		
+				if (wife != "N/A" and indi[0] == wife):
+					wife_birth: str = indi[3]
+			
 
-		if (husb_birth != "N/A"):
-			age = get_age_at_date(husb_birth, marr_date)
+			if (husb_birth != "N/A"):
+				age = get_age_at_date(husb_birth, marr_date)
 
-			if (age < 14):
-				print(f"ERROR: In family {fam[0]}: Husband {husb} was married before the age of 14.")
-		
-		if (wife_birth != "N/A"):
-			age = get_age_at_date(wife_birth, marr_date)
+				if (age < 14):
+					print(f"ERROR: In family {fam[0]}: Husband {husb} was married before the age of 14.")
+			
+			if (wife_birth != "N/A"):
+				age = get_age_at_date(wife_birth, marr_date)
 
-			if (age < 14):
-				print(f"ERROR: In family {fam[0]}: Wife {wife} was married before the age of 14.")
+				if (age < 14):
+					print(f"ERROR: In family {fam[0]}: Wife {wife} was married before the age of 14.")
 
 			
 
