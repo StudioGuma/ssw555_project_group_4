@@ -186,6 +186,50 @@ def less_than_150_years_old(indi_table: list) -> None:
 			if (death_year - birth_year) > 150:
 				print("US07: ERROR –", indi[0], "lived more than 150 years")
 
+
+#US09: No Marriages to Descendants
+def no_marriage_to_descendants(fam_table: list, indi_table: list) -> None:
+    parent_to_children = {}
+    for fam in fam_table:
+        husb, wife, children = fam[2], fam[3], fam[4]
+        for parent in [husb, wife]:
+            if parent not in parent_to_children:
+                parent_to_children[parent] = []
+            parent_to_children[parent].extend(children)
+
+    def get_descendants(person_id, visited=None):
+        if visited is None:
+            visited = set()
+        descendants = set()
+        children = parent_to_children.get(person_id, [])
+        for child in children:
+            if child not in visited:
+                visited.add(child)
+                descendants.add(child)
+                descendants.update(get_descendants(child, visited))
+        return descendants
+
+    for fam in fam_table:
+        husb, wife, fam_id = fam[2], fam[3], fam[0]
+        if wife in get_descendants(husb):
+            print(f"ERROR: US09: Family {fam_id}: Husband {husb} is married to descendant {wife}")
+        if husb in get_descendants(wife):
+            print(f"ERROR: US09: Family {fam_id}: Wife {wife} is married to descendant {husb}")
+
+
+#US10: No Sibling Marriages
+def no_sibling_marriages(fam_table: list) -> None:
+    child_to_fam = {}
+    for fam in fam_table:
+        for child in fam[4]:
+            child_to_fam[child] = fam[0]
+
+    for fam in fam_table:
+        husb, wife, fam_id = fam[2], fam[3], fam[0]
+        if husb in child_to_fam and wife in child_to_fam:
+            if child_to_fam[husb] == child_to_fam[wife]:
+                print(f"ERROR: US10: Family {fam_id}: Siblings {husb} and {wife} are married.")
+
 def birth_after_marriage_and_before_divorce(indi_table: list, fam_table: list) -> None:
     for fam in fam_table:
         marr = fam[1]
@@ -374,6 +418,8 @@ def main() -> int:
 		less_than_150_years_old(indi_table)
 		birth_after_marriage_and_before_divorce(indi_table, fam_table)
 		marriage_after_14(indi_table, fam_table)
+		no_marriage_to_descendants(fam_table, indi_table)
+		no_sibling_marriages(fam_table)
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)
