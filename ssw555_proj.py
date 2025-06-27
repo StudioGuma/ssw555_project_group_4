@@ -143,9 +143,9 @@ def birth_before_parents_death(indi_table: list, fam_table: list) -> None:
 								raise Exception(argv[0] + ": " + child + " born after mother's death")
 					break
 
-def list_recent_births(indi_table: list) -> None:
-	print("Recent births")
+def list_recent_births(indi_table: list) -> list:
 	# Assumes valid date string
+	birth_list: list = []
 
 	for indi in indi_table:
 		birth: str = indi[3]
@@ -159,9 +159,9 @@ def list_recent_births(indi_table: list) -> None:
 			birth_date = datetime(year, month, day)
 			delta = datetime.now() - birth_date
 			if (delta.days < 31):
-				print(indi[0] + ": " + indi[1])
+				birth_list.append(indi[0] + ": " + indi[1])
 
-	print("")
+	return birth_list
 
 def less_than_150_years_old(indi_table: list) -> None:
 	for indi in indi_table:
@@ -380,7 +380,8 @@ def main() -> int:
 		for row in fam_table:
 			fam_table_pretty.add_row(row)
 
-		list_recent_births(indi_table)
+		print("Recent births")
+		print(*list_recent_births(indi_table), sep='\n')
 		
 		print("Individuals")
 		print(indi_table_pretty)
