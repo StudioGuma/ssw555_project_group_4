@@ -75,28 +75,6 @@ def is_valid_date_str(date: str) -> bool:
 		print(e, file=stderr)
 		return False
 
-# def cmp_dates(date1: str, date2: str) -> int:
-# 	if (is_valid_date_str(date1) and is_valid_date_str(date2)):
-# 		# return negative if date1 < date2, positive if date1 > date2, or 0 if date1 == date2
-# 		date1_split: list = date1.split()
-# 		date2_split: list = date2.split()
-
-# 		day1: int = int(date1_split[0])
-# 		month1: int = Month[date1_split[1]].value
-# 		year1: int = int(date1_split[2])
-# 		day2: int = int(date2_split[0])
-# 		month2: int = Month[date2_split[1]].value
-# 		year2: int = int(date2_split[2])
-
-# 		if (year1 != year2):
-# 			return year1 - year2
-# 		elif (month1 != month2):
-# 			return month1 - month2
-# 		return day1 - day2
-		
-# 	else:
-# 		raise Exception(argv[0] + ": comparing invalid date string")
-
 def birth_before_death(indi_table: list) -> None:
 	for row in indi_table:
 		id_, name, _, birth, death, _, _ = row
@@ -135,14 +113,6 @@ def birth_before_parents_death(indi_table: list, fam_table: list) -> None:
 			for indi in indi_table:
 				if (indi[0] == child):
 					child_birth: str = indi[3]
-
-					# if (child_birth != "N/A"):
-					# 	if (husb_death != "N/A"):
-					# 		if (cmp_dates(child_birth, husb_death) > 0):
-					# 			raise Exception(argv[0] + ": " + child + " born after father's death")
-					# 	if (wife_death != "N/A"):
-					# 		if (cmp_dates(child_birth, wife_death) > 0):
-					# 			raise Exception(argv[0] + ": " + child + " born after mother's death")
 
 					child_birth_date = parse_date(child_birth)
 					if (child_birth_date):
