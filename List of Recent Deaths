@@ -1,0 +1,50 @@
+import unittest
+from datetime import datetime
+from gedcom.parser import Parser
+from gedcom.element.individual import IndividualElement
+
+file_path = "C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged"  # Replace with the path to your GEDCOM file
+
+gedcom_parser = Parser()
+
+gedcom_parser.parse_file(file_path)
+
+root_child_elements = gedcom_parser.get_root_child_elements()
+
+current_year = datetime.now().year
+
+recent_years = 50 # Define the number of recent years to consider for "recently deceased"
+
+print(f"Individuals who have died in the last {recent_years} years:")
+
+for element in root_child_elements:
+
+    if isinstance(element, IndividualElement):
+
+        death_data = element.get_death_data()
+
+        if death_data and death_data[0]:
+            try:
+
+                death_year_str = death_data[0].split()[-1]
+                death_year = int(death_year_str)
+
+                if current_year - death_year <= recent_years:
+
+                    given_name, surname = element.get_name()
+
+                    print(f"- {given_name} {surname} (Died: {death_year})")
+
+            except (ValueError, IndexError):
+
+                pass
+
+
+    class TestRecentDeaths(unittest.TestCase):
+
+        def test_recent_death(self):
+            List_of_Recent_Deaths = [
+                {"NAME": "John Doe", "DEAT": {"DATE": "20 Jun 2025"}}, ]
+
+    if __name__ == '__main__':
+        unittest.main()
