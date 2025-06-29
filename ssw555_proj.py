@@ -25,6 +25,17 @@ def parse_date(date_str):
 	except:
 		return None
 
+def split_date(date_str: str) -> list:
+	date_split: list = date_str.split()
+	if (len(date_split) != 3 or date_split[0][0] == '0' or len(date_split[2]) != 4):
+		raise Exception(argv[0] + ": invalid date string")
+
+	day: int = int(date_split[0])
+	month: int = Month[date_split[1]].value
+	year: int = int(date_split[2])
+
+	return [year, month, day]
+
 def is_valid_tag(level: int, tag: str) -> bool:
 	match level:
 		case 0:
@@ -57,43 +68,34 @@ def is_valid_date(year: int, month: int, day: int) -> bool:
 
 def is_valid_date_str(date: str) -> bool:
 	try:
-		date_split: list = date.split()
-		if (len(date_split) != 3 or date_split[0][0] == '0' or len(date_split[2]) != 4):
-			return False
-
-		day: int = int(date_split[0])
-
-		month: int = Month[date_split[1]].value
-
-		year: int = int(date_split[2])
-
-		return is_valid_date(year, month, day)
+		date_split: list = split_date(date)
+		return is_valid_date(date_split[0], date_split[1], date_split[2])
 
 	except Exception as e:
 		print(e, file=stderr)
 		return False
 
-def cmp_dates(date1: str, date2: str) -> int:
-	if (is_valid_date_str(date1) and is_valid_date_str(date2)):
-		# return negative if date1 < date2, positive if date1 > date2, or 0 if date1 == date2
-		date1_split: list = date1.split()
-		date2_split: list = date2.split()
+# def cmp_dates(date1: str, date2: str) -> int:
+# 	if (is_valid_date_str(date1) and is_valid_date_str(date2)):
+# 		# return negative if date1 < date2, positive if date1 > date2, or 0 if date1 == date2
+# 		date1_split: list = date1.split()
+# 		date2_split: list = date2.split()
 
-		day1: int = int(date1_split[0])
-		month1: int = Month[date1_split[1]].value
-		year1: int = int(date1_split[2])
-		day2: int = int(date2_split[0])
-		month2: int = Month[date2_split[1]].value
-		year2: int = int(date2_split[2])
+# 		day1: int = int(date1_split[0])
+# 		month1: int = Month[date1_split[1]].value
+# 		year1: int = int(date1_split[2])
+# 		day2: int = int(date2_split[0])
+# 		month2: int = Month[date2_split[1]].value
+# 		year2: int = int(date2_split[2])
 
-		if (year1 != year2):
-			return year1 - year2
-		elif (month1 != month2):
-			return month1 - month2
-		return day1 - day2
+# 		if (year1 != year2):
+# 			return year1 - year2
+# 		elif (month1 != month2):
+# 			return month1 - month2
+# 		return day1 - day2
 		
-	else:
-		raise Exception(argv[0] + ": comparing invalid date string")
+# 	else:
+# 		raise Exception(argv[0] + ": comparing invalid date string")
 
 def birth_before_death(indi_table: list) -> None:
 	for row in indi_table:
@@ -134,13 +136,22 @@ def birth_before_parents_death(indi_table: list, fam_table: list) -> None:
 				if (indi[0] == child):
 					child_birth: str = indi[3]
 
-					if (child_birth != "N/A"):
-						if (husb_death != "N/A"):
-							if (cmp_dates(child_birth, husb_death) > 0):
-								raise Exception(argv[0] + ": " + child + " born after father's death")
-						if (wife_death != "N/A"):
-							if (cmp_dates(child_birth, wife_death) > 0):
-								raise Exception(argv[0] + ": " + child + " born after mother's death")
+					# if (child_birth != "N/A"):
+					# 	if (husb_death != "N/A"):
+					# 		if (cmp_dates(child_birth, husb_death) > 0):
+					# 			raise Exception(argv[0] + ": " + child + " born after father's death")
+					# 	if (wife_death != "N/A"):
+					# 		if (cmp_dates(child_birth, wife_death) > 0):
+					# 			raise Exception(argv[0] + ": " + child + " born after mother's death")
+
+					child_birth_date = parse_date(child_birth)
+					if (child_birth_date):
+						husb_death_date = parse_date(husb_death)
+						if (husb_death_date and child_birth_date > husb_death_date):
+							raise Exception(argv[0] + ": " + child + " born after father's death")
+						wife_death_date = parse_date(wife_death)
+						if (wife_death_date and child_birth_date > wife_death_date):
+							raise Exception(argv[0] + ": " + child + " born after father's death")
 					break
 
 def list_recent_births(indi_table: list) -> list:
@@ -151,12 +162,7 @@ def list_recent_births(indi_table: list) -> list:
 		birth: str = indi[3]
 
 		if (birth != "N/A"):
-			date_split: list = birth.split()
-			day: int = int(date_split[0])
-			month: int = Month[date_split[1]].value
-			year: int = int(date_split[2])
-
-			birth_date = datetime(year, month, day)
+			birth_date = parse_date(birth)
 			delta = datetime.now() - birth_date
 			if (delta.days < 31):
 				birth_list.append(indi[0] + ": " + indi[1])
@@ -187,24 +193,27 @@ def less_than_150_years_old(indi_table: list) -> None:
 				print("US07: ERROR –", indi[0], "lived more than 150 years")
 
 def birth_after_marriage_and_before_divorce(indi_table: list, fam_table: list) -> None:
-    for fam in fam_table:
-        marr = fam[1]
-        div = fam[5]
+	for fam in fam_table:
+		marr = fam[1]
+		div = fam[5]
 
-        for child in fam[4]:
-            for indi in indi_table:
-                if indi[0] == child and indi[3] != "N/A":
-                    birth = indi[3]
+		for child in fam[4]:
+			for indi in indi_table:
+				if indi[0] == child and indi[3] != "N/A":
+					birth = indi[3]
+					birth_date = parse_date(birth)
+					if (not birth_date):
+						continue
 
-                    birth_parts = birth.split()
-                    if len(birth_parts) != 3 or not birth_parts[2].isdigit():
-                        continue
+					marr_date = parse_date(marr)
+					div_date = parse_date(div)
+					# if marr != "N/A" and cmp_dates(birth, marr) < 0:
+					if (marr_date and birth_date < marr_date):
+						print(f"ERROR: US08: {child} born before parents' marriage")
 
-                    if marr != "N/A" and cmp_dates(birth, marr) < 0:
-                        print(f"ERROR: US08: {child} born before parents' marriage")
-
-                    if div != "N/A" and cmp_dates(birth, div) > 0:
-                        print(f"ERROR: US08: {child} born after parents' divorce")
+					# if div != "N/A" and cmp_dates(birth, div) > 0:
+					if (div_date and birth_date > div_date):
+						print(f"ERROR: US08: {child} born after parents' divorce")
 
 def get_age_at_date(birth: str, date: str) -> int:
 	b_day, b_month, b_year = birth.split()
@@ -215,6 +224,8 @@ def get_age_at_date(birth: str, date: str) -> int:
 
 	age = d_year - b_year
 
+
+
 	if (b_month > d_month) or (d_month == b_month and b_day > d_day):
 		age -= 1
 	
@@ -224,11 +235,6 @@ def marriage_after_14(indi_table: list, fam_table: list) -> None:
 	for fam in fam_table:
 		marr_date: str = fam[1]
 		if (marr_date != "N/A"):
-			marr_split = marr_date.split()
-			marr_year: int = int(marr_split[2])
-			marr_month: int = Month[marr_split[1]].value
-			marr_day: int = int(marr_split[0])
-
 			husb: str = fam[2]
 			wife: str = fam[3]
 
