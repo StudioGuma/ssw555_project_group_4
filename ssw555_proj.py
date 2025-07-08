@@ -332,7 +332,12 @@ def list_orphans(indi_table: list, fam_table: list) -> list:
         print("\nOrphans (US16):")
         for oid, name in orphans:
             print(f"{oid}: {name}")
-    return orphans	
+    return orphans
+
+def order_siblings(indi_table: list, fam_table: list) -> list:
+	new_fam_table: list = fam_table
+
+	return new_fam_table
 
 def main() -> int:
 	try:
