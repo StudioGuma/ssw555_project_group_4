@@ -339,6 +339,12 @@ def order_siblings(indi_table: list, fam_table: list) -> list:
 
 	return new_fam_table
 
+def all_indi_fields_filled(indi_table: list) -> None:
+	print("TODO")
+
+def all_fam_fields_filled(fam_table: list) -> None:
+	print("TODO")
+
 def main() -> int:
 	try:
 		if (len(argv) != 2):
