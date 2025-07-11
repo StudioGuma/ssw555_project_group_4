@@ -1,34 +1,30 @@
+from gedcom.element.individual import IndividualElement
 from gedcom.parser import Parser
 from datetime import date
-from dateutil.ralativedelta import relativedelta
-def calculate_age(birth_date, death_date=None):
-  if birth_date:
-    try:
-      birth_date_obj = datetime.strptime(birth_date, '%d %b %Y').date()
-    except ValueError:
-  return "N/A"
-if death_date:
-  try:
-    death_date_obj = datetime.strptime(death_date, '%d %b %Y').date()
-    except ValueError:
-  return "N/A"
-age = relativedelta(death_date_obj, birth_date_obj)
-return f"{age.year} years"
-else:
-  today = date.today()
-  age = relativedelta(today, birth_date_obj)
-  return f"{age.years} years"
-else:
-  return "N/A"
-file_path = 'ssw555_proj1.ged'
+from datetime import datetime
+
+def calculate_age(born):
+ today = date.today()
+    return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+
+file_path = 'C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged'  # Replace with the actual file path
+
 gedcom_parser = Parser()
-gedcom_parser.parser_file(ssw555_proj1.ged)
-for element in gedcom_parser.get_root_child_element():
+
+gedcom_parser.parse_file(file_path)
+
+root_child_elements = gedcom_parser.get_root_child_elements()
+
+for element in root_child_elements:
   if isinstance(element, IndividualElement):
-    name: element.get__name()
-    birth_data = element.get_birth_data()
-    death_data = element.get_death_data()
-    birth_date = birth_data[0] if birth_data else None
-    death_data = death_data[0] if death_data else None
-    age = calculate_age(birth_date, death_date)
-    print(f"{name[0]} {name[1]}: Age {age}:)
+     name = element.get_name()
+      birth_data = element.get_birth_data()
+
+try:
+ birth_date = datetime.strptime(birth_date_str, '%d %b %Y').date()
+                age = calculate_age(birth_date)
+                print(f"{name[0]} {name[1]} is {age} years old.")
+            except ValueError:
+                print(f"Could not parse birth date for {name[0]} {name[1]}: {birth_date_str}")
+        else:
+            print(f"No birth date found for {name[0]} {name[1]}.")

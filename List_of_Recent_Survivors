@@ -1,0 +1,113 @@
+from gedcom.parser import Parser
+from gedcom.element.individual import IndividualElement
+import unittest
+from unittest.mock import MagicMock, patch
+import os
+
+class GedcomProcessor:
+    def __init__(self, gedcom_file_path):
+        self.gedcom_file_path = gedcom_file_path
+        self.parser = Parser()
+
+    def get_survivors(self):
+
+        self.parser.parse_file(self.gedcom_file_path)
+        root_child_elements = self.parser.get_root_child_elements()
+
+        survivors = []
+        for element in root_child_elements:
+            if isinstance(element, IndividualElement):
+                if not element.is_deceased():
+                    given_name, surname = element.get_name()
+                    survivors.append(f"{given_name} {surname}")
+        return survivors
+
+if __name__ == '__main__':
+
+    processor = GedcomProcessor('C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged')
+    survivor_list = processor.get_survivors()
+
+    if survivor_list:
+        print("Recent Survivors:")
+        for survivor in survivor_list:
+            print(f"- {survivor}")
+    else:
+        print("No survivors found in the GEDCOM file.")
+
+class TestGedcomProcessor(unittest.TestCase):
+
+    def setUp(self):
+
+        self.test_file_path = "test_gedcom.ged"
+        with open(self.test_file_path, "w") as f:
+            f.write("0 HEAD\n")
+            f.write("1 SOUR Test\n")
+            f.write("0 @I1@ INDI\n")
+            f.write("1 NAME John /Doe/\n")
+            f.write("0 @I2@ INDI\n")
+            f.write("1 NAME Jane /Smith/\n")
+            f.write("1 DEAT\n")
+            f.write("0 @I3@ INDI\n")
+            f.write("1 NAME Peter /Jones/\n")
+            f.write("0 TRLR\n")
+
+    def tearDown(self):
+
+        if os.path.exists(self.test_file_path):
+            os.remove(self.test_file_path)
+
+    def test_get_survivors(self):
+
+        processor = GedcomProcessor(self.test_file_path)
+        survivors = processor.get_survivors()
+        self.assertEqual(survivors, ["John Doe", "Peter Jones"])
+
+    def test_no_survivors(self):
+
+        with open(self.test_file_path, "w") as f:
+            f.write("0 HEAD\n")
+            f.write("1 SOUR Test\n")
+            f.write("0 @I1@ INDI\n")
+            f.write("1 NAME John /Doe/\n")
+            f.write("1 DEAT\n")
+            f.write("0 @I2@ INDI\n")
+            f.write("1 NAME Jane /Smith/\n")
+            f.write("1 DEAT\n")
+            f.write("0 TRLR\n")
+
+        processor = GedcomProcessor(self.test_file_path)
+        survivors = processor.get_survivors()
+        self.assertEqual(survivors, [])
+
+    @patch('gedcom.parser.Parser.parse_file')
+    @patch('gedcom.parser.Parser.get_root_child_elements')
+    def test_get_survivors_mocked(self, mock_get_root_child_elements, mock_parse_file):
+
+        mock_individual_1 = MagicMock(spec=IndividualElement)
+        mock_individual_1.is_deceased.return_value = False
+        mock_individual_1.get_name.return_value = ("Alicia", "Johnson")
+
+        mock_individual_2 = MagicMock(spec=IndividualElement)
+        mock_individual_2.is_deceased.return_value = True
+        mock_individual_2.get_name.return_value = ("Boby", "Williams")
+
+        mock_individual_3 = MagicMock(spec=IndividualElement)
+        mock_individual_3.is_deceased.return_value = False
+        mock_individual_3.get_name.return_value = ("Charlie", "Johnson")
+
+        mock_get_root_child_elements.return_value = [
+            mock_individual_1,
+            mock_individual_2,
+            mock_individual_3
+        ]
+
+        processor = GedcomProcessor("dummy_file.ged")
+        survivors = processor.get_survivors()
+
+        mock_parse_file.assert_called_once_with("dummy_file.ged")
+        mock_get_root_child_elements.assert_called_once()
+
+        self.assertEqual(survivors, ["Alicia Johnson", "Charlie Johnson"])
+
+if __name__ == '__main__':
+    unittest.main()
