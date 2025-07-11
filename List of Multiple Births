@@ -1,6 +1,8 @@
 from gedcom.parser import Parser
 from gedcom.element.individual import IndividualElement
 from gedcom.element.family import FamilyElement
+import unittest
+from unittest.mock import MagicMock
 
 file_path = "C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged" # Replace with the path to your GEDCOM file
 
@@ -9,7 +11,7 @@ gedcom_parser.parse_file(file_path)
 
 families = gedcom_parser.get_root_child_elements()
 
-print("LIst of Families with Multiple Births:")
+print("List of Families with Multiple Births:")
 
 for element in families:
     if isinstance(element, FamilyElement):
@@ -27,3 +29,54 @@ for element in families:
                     parent_names.append(f"{given_name} {surname}")
 
             print(f"  Parents: {' & '.join(parent_names)} - Children: {len(children)}")
+
+class TestGedcomMultipleBirths(unittest.TestCase):
+
+    def test_multiple_births_detection(self):
+
+        mock_child1 = MagicMock(spec=IndividualElement)
+        mock_child1.get_name.return_value = ("Child", "One")
+        mock_child2 = MagicMock(spec=IndividualElement)
+        mock_child2.get_name.return_value = ("Child", "Two")
+        mock_parent1 = MagicMock(spec=IndividualElement)
+        mock_parent1.get_name.return_value = ("Parent", "Father")
+        mock_parent2 = MagicMock(spec=IndividualElement)
+        mock_parent2.get_name.return_value = ("Parent", "Mother")
+
+        mock_family = MagicMock(spec=FamilyElement)
+
+        mock_parser = MagicMock(spec=Parser)
+        mock_parser.get_root_child_elements.return_value = [mock_family]
+        mock_parser.get_family_members.side_effect = [
+            [mock_child1, mock_child2],
+            [mock_parent1, mock_parent2]
+        ]
+        import io
+        from contextlib import redirect_stdout
+        f = io.StringIO()
+
+        with redirect_stdout(f):
+
+            families = mock_parser.get_root_child_elements()
+            print("List of Families with Multiple Births:")
+            for element in families:
+                if isinstance(element, FamilyElement):
+                    children = mock_parser.get_family_members(element, members_type="CHIL")
+                    if len(children) > 1:
+                        parents = mock_parser.get_family_members(element, members_type="PARENTS")
+                        parent_names = []
+                        for parent in parents:
+                            if isinstance(parent, IndividualElement):
+                                given_name, surname = parent.get_name()
+                                parent_names.append(f"{given_name} {surname}")
+                        print(f"Parents: {' & '.join(parent_names)} - Children: {len(children)}")
+
+        output = f.getvalue()
+
+
+        expected_output = "List of Families with Multiple Births:\n" \
+                          "Parents: Parent Father & Parent Mother - Children: 2\n"
+        self.assertEqual(output, expected_output)
+
+if __name__ == '__main__':
+    unittest.main()
