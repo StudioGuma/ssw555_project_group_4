@@ -72,7 +72,6 @@ def is_valid_date_str(date: str) -> bool:
 		return is_valid_date(date_split[0], date_split[1], date_split[2])
 
 	except Exception as e:
-		print(e, file=stderr)
 		return False
 
 def birth_before_death(indi_table: list) -> None:
@@ -118,10 +117,10 @@ def birth_before_parents_death(indi_table: list, fam_table: list) -> None:
 					if (child_birth_date):
 						husb_death_date = parse_date(husb_death)
 						if (husb_death_date and child_birth_date > husb_death_date):
-							raise Exception(argv[0] + ": " + child + " born after father's death")
+							raise Exception(argv[0] + ": " + child + " born after parent 1's death")
 						wife_death_date = parse_date(wife_death)
 						if (wife_death_date and child_birth_date > wife_death_date):
-							raise Exception(argv[0] + ": " + child + " born after father's death")
+							raise Exception(argv[0] + ": " + child + " born after parent 2's death")
 					break
 
 def list_recent_births(indi_table: list) -> list:
@@ -340,10 +339,27 @@ def order_siblings(indi_table: list, fam_table: list) -> list:
 	return new_fam_table
 
 def all_indi_fields_filled(indi_table: list) -> None:
-	print("TODO")
+	for indi in indi_table:
+		if (indi[0] == "N/A"):
+			raise Exception(argv[0] + ": individual ID must be filled")
+		if (indi[1] == "N/A"):
+			raise Exception(argv[0] + f": name of individual {indi[0]} must be filled")
+		if (not is_valid_date_str(indi[3])):
+			raise Exception(argv[0] + f": birth date of individual {indi[0]} must be valid")
+	return
 
 def all_fam_fields_filled(fam_table: list) -> None:
-	print("TODO")
+	for fam in fam_table:
+		if (fam[0] == "N/A"):
+			raise Exception(argv[0] + f": family ID must be filled")
+		if (not is_valid_date_str[fam[1]]):
+			raise Exception(argv[0] + f": marriage date of family {fam[0]} must be filled")
+		if (fam[2] == "N/A"):
+			raise Exception(argv[0] + f": parent 1 of family {fam[0]} must be filled")
+		if (fam[3] == "N/A"):
+			raise Exception(argv[0] + f": parent 2 of family {fam[0]} must be filled")
+	return
+		
 
 def main() -> int:
 	try:
@@ -358,7 +374,7 @@ def main() -> int:
 		"Child in", "Spouse in"]
 		fam_table: list = []
 		fam_table_pretty = PrettyTable()
-		fam_table_pretty.field_names = ["ID", "Date of Marriage", "Husband", "Wife", "Children", "Date of Divorce"]
+		fam_table_pretty.field_names = ["ID", "Date of Marriage", "Parent 1", "Parent 2", "Children", "Date of Divorce"]
 
 		with open(argv[1], "r") as ged:
 			line: string = ged.readline()
@@ -455,6 +471,9 @@ def main() -> int:
 								is_div = False
 
 				line = ged.readline()
+
+		all_indi_fields_filled(indi_table)
+		all_fam_fields_filled(fam_table)
 
 		birth_before_death(indi_table)
 		marriage_before_death(indi_table, fam_table)
