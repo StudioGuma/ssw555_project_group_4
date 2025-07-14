@@ -6,21 +6,21 @@ from ssw555_proj import validate_dates_before_today
 class TestValidateDatesBeforeToday(unittest.TestCase):
     def test_future_dates(self):
         indi_table = [
-            ["@I1@", "John /Doe/", "M", "1 JAN 2030", "N/A", [], []],  # future birth
-            ["@I2@", "Jane /Smith/", "F", "1 JAN 1990", "1 JAN 2035", [], []],  # future death
+            ["@I1@", "John /Doe/", "M", "1 JAN 2030", "N/A", [], []],
+            ["@I2@", "Jane /Smith/", "F", "1 JAN 1990", "1 JAN 2035", [], []],
         ]
         
         fam_table = [
-            ["@F1@", "1 JAN 2031", "@I1@", "@I2@", [], "1 JAN 2032"],  # future marriage and divorce
+            ["@F1@", "1 JAN 2031", "@I1@", "@I2@", [], "1 JAN 2032"],
         ]
 
-        # Redirect stdout to capture print output
+        
         captured_output = StringIO()
         sys.stdout = captured_output
 
         validate_dates_before_today(indi_table, fam_table)
 
-        sys.stdout = sys.__stdout__  # Reset redirect
+        sys.stdout = sys.__stdout__
 
         output = captured_output.getvalue()
 
