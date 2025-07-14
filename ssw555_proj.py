@@ -488,7 +488,7 @@ def main() -> int:
 		list_living_married(indi_table, fam_table)
 		list_orphans(indi_table, fam_table)
 		validate_dates_before_today(indi_table, fam_table)
-		#list_families_sorted_by_marriage(fam_table)
+		list_families_sorted_by_marriage(fam_table)
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)
