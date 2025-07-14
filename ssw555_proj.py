@@ -334,6 +334,38 @@ def list_orphans(indi_table: list, fam_table: list) -> list:
             print(f"{oid}: {name}")
     return orphans	
 
+def list_families_sorted_by_marriage(fam_table: list) -> None:
+    valid_fams = [fam for fam in fam_table if fam[1] != "N/A"]
+    
+    valid_fams.sort(key=lambda fam: datetime.strptime(fam[1], "%d %b %Y"))
+
+    for fam in valid_fams:
+        fam_id = fam[0]
+        husb_id = fam[2]
+        wife_id = fam[3]
+        marr_date = fam[1]
+        print(f"Family {fam_id}: Husband {husb_id}, Wife {wife_id} | Married: {marr_date}")
+
+def validate_dates_before_today(indi_table: list, fam_table: list) -> None:
+    today = datetime.today()
+
+    def is_future_date(date_str: str) -> bool:
+        parsed = parse_date(date_str)
+        return parsed and parsed > today
+
+    for indi in indi_table:
+        if is_future_date(indi[3]):
+            print(f"ERROR: US18: Individual {indi[0]} has birth date in the future.")
+        if is_future_date(indi[4]):
+            print(f"ERROR: US18: Individual {indi[0]} has death date in the future.")
+
+    for fam in fam_table:
+        if is_future_date(fam[1]):
+            print(f"ERROR: US18: Family {fam[0]} has marriage date in the future.")
+        if is_future_date(fam[5]):
+            print(f"ERROR: US18: Family {fam[0]} has divorce date in the future.")
+
+
 def main() -> int:
 	try:
 		if (len(argv) != 2):
@@ -455,6 +487,8 @@ def main() -> int:
 		no_sibling_marriages(fam_table)
 		list_living_married(indi_table, fam_table)
 		list_orphans(indi_table, fam_table)
+		validate_dates_before_today(indi_table, fam_table)
+		#list_families_sorted_by_marriage(fam_table)
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)
