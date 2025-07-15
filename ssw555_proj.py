@@ -72,7 +72,6 @@ def is_valid_date_str(date: str) -> bool:
 		return is_valid_date(date_split[0], date_split[1], date_split[2])
 
 	except Exception as e:
-		print(e, file=stderr)
 		return False
 
 def birth_before_death(indi_table: list) -> None:
@@ -118,10 +117,10 @@ def birth_before_parents_death(indi_table: list, fam_table: list) -> None:
 					if (child_birth_date):
 						husb_death_date = parse_date(husb_death)
 						if (husb_death_date and child_birth_date > husb_death_date):
-							raise Exception(argv[0] + ": " + child + " born after father's death")
+							raise Exception(argv[0] + ": " + child + " born after parent 1's death")
 						wife_death_date = parse_date(wife_death)
 						if (wife_death_date and child_birth_date > wife_death_date):
-							raise Exception(argv[0] + ": " + child + " born after father's death")
+							raise Exception(argv[0] + ": " + child + " born after parent 2's death")
 					break
 
 def list_recent_births(indi_table: list) -> list:
@@ -332,7 +331,57 @@ def list_orphans(indi_table: list, fam_table: list) -> list:
         print("\nOrphans (US16):")
         for oid, name in orphans:
             print(f"{oid}: {name}")
-    return orphans	
+    return orphans
+
+def is_sorted(lst: list) -> bool:
+	for i in range(len(lst) - 1):
+		if (lst[i] > lst[i + 1]):
+			return False
+
+	return True
+
+def order_siblings(indi_table: list, fam: list) -> list:
+	sibling_list: list = fam[4]
+	birth_list: list = []
+
+	for sibling in sibling_list:
+		for indi in indi_table:
+			if (indi[0] == sibling):
+				birth_list.append(indi[3])
+
+	bd_list: list = list(map(parse_date, birth_list))
+
+	while (not is_sorted(bd_list)):
+		for i in range(len(bd_list) - 1):
+			if (bd_list[i] > bd_list[i + 1]):
+				bd_list[i], bd_list[i + 1] = bd_list[i + 1], bd_list[i]
+				sibling_list[i], sibling_list[i + 1] = sibling_list[i + 1], sibling_list[i]
+
+	fam[4] = sibling_list
+	return fam
+
+def all_indi_fields_filled(indi_table: list) -> None:
+	for indi in indi_table:
+		if (indi[0] == "N/A"):
+			raise Exception(argv[0] + ": individual ID must be filled")
+		if (indi[1] == "N/A"):
+			raise Exception(argv[0] + f": name of individual {indi[0]} must be filled")
+		if (not is_valid_date_str(indi[3])):
+			raise Exception(argv[0] + f": birth date of individual {indi[0]} must be valid")
+	return
+
+def all_fam_fields_filled(fam_table: list) -> None:
+	for fam in fam_table:
+		if (fam[0] == "N/A"):
+			raise Exception(argv[0] + f": family ID must be filled")
+		if (not is_valid_date_str(fam[1])):
+			raise Exception(argv[0] + f": marriage date of family {fam[0]} must be filled")
+		if (fam[2] == "N/A"):
+			raise Exception(argv[0] + f": parent 1 of family {fam[0]} must be filled")
+		if (fam[3] == "N/A"):
+			raise Exception(argv[0] + f": parent 2 of family {fam[0]} must be filled")
+	return
+		
 
 def list_families_sorted_by_marriage(fam_table: list) -> None:
     valid_fams = [fam for fam in fam_table if fam[1] != "N/A"]
@@ -437,7 +486,7 @@ def main() -> int:
 		"Child in", "Spouse in"]
 		fam_table: list = []
 		fam_table_pretty = PrettyTable()
-		fam_table_pretty.field_names = ["ID", "Date of Marriage", "Husband", "Wife", "Children", "Date of Divorce"]
+		fam_table_pretty.field_names = ["ID", "Date of Marriage", "Parent 1", "Parent 2", "Children", "Date of Divorce"]
 
 		with open(argv[1], "r") as ged:
 			line: string = ged.readline()
@@ -451,6 +500,7 @@ def main() -> int:
 			is_div: bool = False
 
 			while (line != ""):
+				line = line.strip('\n')
 				params: list = line.split(" ", 2)
 				for i in range(len(params)):
 					params[i] = params[i].rstrip()
@@ -459,21 +509,22 @@ def main() -> int:
 				match level:
 					case 0:
 						# add current row to the table
-						if (len(params) > 2 and is_valid_tag(level, params[2])):
-							match params[2]:
-								case "INDI":
-									if (cur_indi_row[0] != "N/A"):
-										indi_table.append(cur_indi_row)
-									cur_indi_row = ["N/A", "N/A", "N/A", "N/A", "N/A", [], []]
+						if (len(params) > 2 and is_valid_tag(level, params[2])
+						or len(params) > 1 and params[1] == "TRLR"):
+							if (cur_indi_row[0] != "N/A"):
+								indi_table.append(cur_indi_row)
+							cur_indi_row = ["N/A", "N/A", "N/A", "N/A", "N/A", [], []]
+							if (cur_fam_row[0] != "N/A"):
+								fam_table.append(cur_fam_row)
+							cur_fam_row = ["N/A", "N/A", "N/A", "N/A", [], "N/A"]
 
-									cur_indi_row[0] = params[1]
+							if (len(params) > 2):
+								match params[2]:
+									case "INDI":
+										cur_indi_row[0] = params[1]
 
-								case "FAM":
-									if (cur_fam_row[0] != "N/A"):
-										fam_table.append(cur_fam_row)
-									cur_fam_row = ["N/A", "N/A", "N/A", "N/A", [], "N/A"]
-
-									cur_fam_row[0] = params[1]
+									case "FAM":
+										cur_fam_row[0] = params[1]
 
 					case 1:
 						if (is_valid_tag(level, params[1])):
@@ -535,6 +586,9 @@ def main() -> int:
 
 				line = ged.readline()
 
+		all_indi_fields_filled(indi_table)
+		all_fam_fields_filled(fam_table)
+
 		birth_before_death(indi_table)
 		marriage_before_death(indi_table, fam_table)
 		birth_before_parents_death(indi_table, fam_table)
@@ -549,6 +603,9 @@ def main() -> int:
 		list_families_sorted_by_marriage(fam_table)
 		show_divorce_dates(fam_table, indi_table)
 		display_marriages_per_person(fam_table, indi_table)
+
+		for fam in fam_table:
+			fam = order_siblings(indi_table, fam)
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)

@@ -34,18 +34,29 @@ class Tests(unittest.TestCase):
 		["@I3@", "Mrs. Fakename Jr.", "F", "2 MAR 1990", "N/A", ["@F1@"], []]
 	]
 	test_fam_table2: list = [
-		["@F1@", "13 APR 1970", "@I1@", "@I2@", ["@I3"], "N/A"]
+		["@F1@", "13 APR 1970", "@I1@", "@I2@", ["@I3@"], "N/A"]
 	]
 
 	test_indi_table3: list = [
-		["@I1@", "Mr. Fakename III", "M", "25 JUN 2025", "N/A", [], []],
-		["@I1@", "Mx. Fakename III", "F", "25 JUN 2022", "N/A", [], []]
+		["@I1@", "Mr. Fakename", "M", "1 JAN 1940", "N/A", [], ["@F1@"]],
+		["@I2@", "Mrs. Fakename", "F", "2 JAN 1941", "N/A", [], ["@F1@"]],
+		["@I3@", "Mr. Fakename III", "M", "7 JUL 2025", "N/A", ["@F1@"], []],
+		["@I4@", "Mx. Fakename III", "F", "25 JUN 2022", "N/A", ["@F1@"], []]
+	]
+	test_fam_table3: list = [
+		["@F1@", "13 APR 1999", "@I1@", "@I2@", ["@I3@", "@I4@"], "N/A"]
 	]
 
 	def test_smaller(self):
-		self.assertRaises(Exception, marriage_after_14(self.test_indi_table, self.test_fam_table))
-		self.assertRaises(Exception, birth_before_parents_death(self.test_indi_table2, self.test_fam_table2))
-		self.assertEqual(["@I1@: Mr. Fakename III"], list_recent_births(self.test_indi_table3))
+		self.assertRaises(Exception, marriage_after_14, (self.test_indi_table, self.test_fam_table))
+		self.assertRaises(Exception, birth_before_parents_death, (self.test_indi_table2, self.test_fam_table2))
+		self.assertEqual(["@I3@: Mr. Fakename III"], list_recent_births(self.test_indi_table3))
+		self.assertEqual(["@F1@", "13 APR 1999", "@I1@", "@I2@", ["@I4@", "@I3@"], "N/A"],
+		order_siblings(self.test_indi_table3, self.test_fam_table3[0]))
+		self.assertRaises(Exception,
+		all_indi_fields_filled, ([["@I1@", "Mr. Fakename", "M", "N/A", "N/A", [], ["@F1@"]]]))
+		self.assertRaises(Exception,
+		all_fam_fields_filled, ([["@F1@", "N/A", "@I1@", "@I2@", ["@I3@", "@I4@"], "N/A"]]))
 
 if __name__ == "__main__":
 	unittest.main(verbosity=2)
