@@ -374,7 +374,7 @@ def all_fam_fields_filled(fam_table: list) -> None:
 	for fam in fam_table:
 		if (fam[0] == "N/A"):
 			raise Exception(argv[0] + f": family ID must be filled")
-		if (not is_valid_date_str[fam[1]]):
+		if (not is_valid_date_str(fam[1])):
 			raise Exception(argv[0] + f": marriage date of family {fam[0]} must be filled")
 		if (fam[2] == "N/A"):
 			raise Exception(argv[0] + f": parent 1 of family {fam[0]} must be filled")
@@ -508,7 +508,8 @@ def main() -> int:
 		list_living_married(indi_table, fam_table)
 		list_orphans(indi_table, fam_table)
 
-		fam_table = list(map(order_siblings, fam_table))
+		for fam in fam_table:
+			fam = order_siblings(indi_table, fam)
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)
