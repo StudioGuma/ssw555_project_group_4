@@ -333,10 +333,32 @@ def list_orphans(indi_table: list, fam_table: list) -> list:
             print(f"{oid}: {name}")
     return orphans
 
-def order_siblings(indi_table: list, fam_table: list) -> list:
-	new_fam_table: list = fam_table
+def is_sorted(lst: list) -> bool:
+	for i in range(len(lst) - 1):
+		if (lst[i] > lst[i + 1]):
+			return False
 
-	return new_fam_table
+	return True
+
+def order_siblings(indi_table: list, fam: list) -> list:
+	sibling_list: list = fam[4]
+	birth_list: list = []
+
+	for sibling in sibling_list:
+		for indi in indi_table:
+			if (indi[0] == sibling):
+				birth_list.append(indi[3])
+
+	bd_list: list = list(map(parse_date, birth_list))
+
+	while (not is_sorted(bd_list)):
+		for i in range(len(bd_list) - 1):
+			if (bd_list[i] > bd_list[i + 1]):
+				bd_list[i], bd_list[i + 1] = bd_list[i + 1], bd_list[i]
+				sibling_list[i], sibling_list[i + 1] = sibling_list[i + 1], sibling_list[i]
+
+	fam[4] = sibling_list
+	return fam
 
 def all_indi_fields_filled(indi_table: list) -> None:
 	for indi in indi_table:
@@ -485,6 +507,8 @@ def main() -> int:
 		no_sibling_marriages(fam_table)
 		list_living_married(indi_table, fam_table)
 		list_orphans(indi_table, fam_table)
+
+		fam_table = list(map(order_siblings, fam_table))
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)

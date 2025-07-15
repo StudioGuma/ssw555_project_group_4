@@ -51,8 +51,8 @@ class Tests(unittest.TestCase):
 		self.assertRaises(Exception, marriage_after_14, (self.test_indi_table, self.test_fam_table))
 		self.assertRaises(Exception, birth_before_parents_death, (self.test_indi_table2, self.test_fam_table2))
 		self.assertEqual(["@I3@: Mr. Fakename III"], list_recent_births(self.test_indi_table3))
-		# self.assertEqual(["@F1@", "13 APR 1999", "@I1@", "@I2@", ["@I4@", "@I3@"], "N/A"],
-		# order_siblings(self.test_indi_table3, self.test_fam_table3))
+		self.assertEqual(["@F1@", "13 APR 1999", "@I1@", "@I2@", ["@I4@", "@I3@"], "N/A"],
+		order_siblings(self.test_indi_table3, self.test_fam_table3[0]))
 		self.assertRaises(Exception,
 		all_indi_fields_filled, ([["@I1@", "Mr. Fakename", "M", "N/A", "N/A", [], ["@F1@"]]]))
 		self.assertRaises(Exception,
