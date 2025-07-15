@@ -365,6 +365,64 @@ def validate_dates_before_today(indi_table: list, fam_table: list) -> None:
         if is_future_date(fam[5]):
             print(f"ERROR: US18: Family {fam[0]} has divorce date in the future.")
 
+def show_divorce_dates(fam_table: list, indi_table: list) -> None:
+    id_to_name = {}
+
+    for indi in indi_table:
+        indi_id = indi[0]
+        indi_name = indi[1]
+        id_to_name[indi_id] = indi_name
+
+    print("Divorce Dates:")
+
+    for fam in fam_table:
+        fam_id = fam[0]
+        divorce_date = fam[5]
+
+        if divorce_date != "N/A":
+
+            husb_id = fam[2]
+            wife_id = fam[3]
+
+            husb_name = id_to_name.get(husb_id, "Unknown")
+            wife_name = id_to_name.get(wife_id, "Unknown")
+
+            print(f"Family {fam_id}: {husb_name} and {wife_name} divorced on {divorce_date}")
+
+def display_marriages_per_person(fam_table: list, indi_table: list) -> None:
+    id_to_name = {}
+    marriages = {}
+
+    for indi in indi_table:
+        indi_id = indi[0]
+        indi_name = indi[1]
+        id_to_name[indi_id] = indi_name
+        marriages[indi_id] = []
+    for fam in fam_table:
+        marriage_date = fam[1]
+        husb = fam[2]
+        wife = fam[3]
+        if marriage_date != "N/A":
+            if husb in marriages:
+                marriages[husb].append((wife, marriage_date))
+            else:
+                marriages[husb] = [(wife, marriage_date)]
+            if wife in marriages:
+                marriages[wife].append((husb, marriage_date))
+            else:
+                marriages[wife] = [(husb, marriage_date)]
+    print("Marriages Per Person:")
+
+    for person_id in marriages:
+        spouse_data = marriages[person_id]
+
+        if not spouse_data:
+            continue
+        for spouse_id, date in spouse_data:
+            person_name = id_to_name.get(person_id, "Unknown")
+            spouse_name = id_to_name.get(spouse_id, "Unknown")
+            print(f"{person_name} ({person_id}) married {spouse_name} ({spouse_id}) on {date}")
+
 
 def main() -> int:
 	try:
@@ -489,6 +547,8 @@ def main() -> int:
 		list_orphans(indi_table, fam_table)
 		validate_dates_before_today(indi_table, fam_table)
 		list_families_sorted_by_marriage(fam_table)
+		show_divorce_dates(fam_table, indi_table)
+		display_marriages_per_person(fam_table, indi_table)
 
 		for row in indi_table:
 			indi_table_pretty.add_row(row)
