@@ -410,6 +410,7 @@ def main() -> int:
 			is_div: bool = False
 
 			while (line != ""):
+				line = line.strip('\n')
 				params: list = line.split(" ", 2)
 				for i in range(len(params)):
 					params[i] = params[i].rstrip()
@@ -418,21 +419,22 @@ def main() -> int:
 				match level:
 					case 0:
 						# add current row to the table
-						if (len(params) > 2 and is_valid_tag(level, params[2])):
-							match params[2]:
-								case "INDI":
-									if (cur_indi_row[0] != "N/A"):
-										indi_table.append(cur_indi_row)
-									cur_indi_row = ["N/A", "N/A", "N/A", "N/A", "N/A", [], []]
+						if (len(params) > 2 and is_valid_tag(level, params[2])
+						or len(params) > 1 and params[1] == "TRLR"):
+							if (cur_indi_row[0] != "N/A"):
+								indi_table.append(cur_indi_row)
+							cur_indi_row = ["N/A", "N/A", "N/A", "N/A", "N/A", [], []]
+							if (cur_fam_row[0] != "N/A"):
+								fam_table.append(cur_fam_row)
+							cur_fam_row = ["N/A", "N/A", "N/A", "N/A", [], "N/A"]
 
-									cur_indi_row[0] = params[1]
+							if (len(params) > 2):
+								match params[2]:
+									case "INDI":
+										cur_indi_row[0] = params[1]
 
-								case "FAM":
-									if (cur_fam_row[0] != "N/A"):
-										fam_table.append(cur_fam_row)
-									cur_fam_row = ["N/A", "N/A", "N/A", "N/A", [], "N/A"]
-
-									cur_fam_row[0] = params[1]
+									case "FAM":
+										cur_fam_row[0] = params[1]
 
 					case 1:
 						if (is_valid_tag(level, params[1])):
