@@ -472,6 +472,11 @@ def display_marriages_per_person(fam_table: list, indi_table: list) -> None:
             spouse_name = id_to_name.get(spouse_id, "Unknown")
             print(f"{person_name} ({person_id}) married {spouse_name} ({spouse_id}) on {date}")
 
+def sibling_spacing(indi_table: list, fam_table: list) -> None:
+	print("TODO")
+
+def unique_families_by_spouses(indi_table: list, fam_table: list) -> None:
+	print("TODO")
 
 def main() -> int:
 	try:
