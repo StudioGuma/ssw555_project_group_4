@@ -1,0 +1,37 @@
+from gedcom.parser import Parser
+from gedcom.element.individual import IndividualElement
+
+def calculate_age(birth_year, current_year=None):
+    if birth_year is None:
+        return None
+    if current_year is None:
+        import datetime
+        current_year = datetime.date.today().year
+    return current_year - birth_year
+def find_large_age_differences(gedcom_file_path, age_threshold=30):
+    gedcom_parser = Parser()
+    gedcom_parser.parse_file(gedcom_file_path)
+    root_child_elements = gedcom_parser.get_root_child_elements()
+    large_age_differences = []
+    for element in root_child_elements:
+        if isinstance(element, IndividualElement):
+            individual_name = element.get_name()[0] + " " + element.get_name()[1]
+            individual_birth_year = element.get_birth_year()
+            parents = gedcom_parser.get_parents(element)
+            for parent in parents:
+                parent_name = parent.get_name()[0] + " " + parent.get_name()[1]
+                parent_birth_year = parent.get_birth_year()
+                if individual_birth_year is not None and parent_birth_year is not None:
+                    age_diff = calculate_age(individual_birth_year, parent_birth_year)
+                    if age_diff is not None and abs(age_diff) > age_threshold:
+                        large_age_differences.append({
+                            "type": "Parent-Child",
+                            "parent": parent_name,
+                            "child": individual_name,
+                            "age_difference": abs(age_diff)
+                        })
+    return large_age_differences
+gedcom_file = "C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged"
+large_gaps = find_large_age_differences(gedcom_file, age_threshold=30)
+for gap in large_gaps:
+    print(f"Large age difference: {gap['type']} - Parent: {gap['parent']}, Child: {gap['child']}, Difference: {gap['age_difference']} years")
