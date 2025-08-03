@@ -1,0 +1,113 @@
+Family ID | Husband | Wife
+-----------------------------
+@F1@ | Unknown | James Paul /McCartney/
+@F2@ | Unknown | James Paul /McCartney/
+@F3@ | Unknown | James Paul /McCartney/
+@F4@ | Unknown | James /McCartney/
+@F5@ | Unknown | James /McCartney/
+@F6@ | Unknown | Leopold Vail /Eastman/
+Recent births
+
+Individuals
++-------+----------------------------+--------+---------------+---------------+----------+--------------------------+
+|   ID  |            Name            | Gender | Date of Birth | Date of Death | Child in |        Spouse in         |
++-------+----------------------------+--------+---------------+---------------+----------+--------------------------+
+|  @I1@ |   James Paul /McCartney/   |   M    |  18 JUN 1942  |      N/A      | ['@F4@'] | ['@F1@', '@F2@', '@F3@'] |
+|  @I2@ |     James /McCartney/      |   M    |   1 JAN 1902  |   1 JAN 1976  |    []    |     ['@F4@', '@F5@']     |
+|  @I3@ |   Mary Patricia /Mohin/    |   F    |   1 JAN 1909  |   1 JAN 1956  |    []    |         ['@F4@']         |
+|  @I4@ | Peter Michael /McCartney/  |   M    |   7 JAN 1944  |      N/A      | ['@F4@'] |            []            |
+|  @I5@ |     Angie /McCartney/      |   F    |   1 JAN 1902  |   1 JAN 1976  |    []    |         ['@F5@']         |
+|  @I6@ |      Ruth /McCartney/      |   F    |   1 JAN 1942  |      N/A      | ['@F5@'] |            []            |
+|  @I7@ |   Linda Louise /Eastman/   |   F    |  24 SEP 1941  |  17 APR 1998  | ['@F6@'] |         ['@F2@']         |
+|  @I8@ |  Heather Louise McCartney  |   F    |  31 DEC 1962  |      N/A      | ['@F2@'] |            []            |
+|  @I9@ |   Mary Anna /McCartney/    |   F    |  28 AUG 1969  |      N/A      | ['@F2@'] |            []            |
+| @I10@ |   Leopold Vail /Eastman/   |   M    |  12 JAN 1910  |  30 JUL 1991  |    []    |         ['@F6@']         |
+| @I11@ |      Louise /Lindner/      |   F    |   1 JAN 1867  |   1 JAN 1962  |    []    |         ['@F6@']         |
+| @I12@ |  Stella Nina /McCartney/   |   F    |  13 SEP 1971  |      N/A      | ['@F2@'] |            []            |
+| @I13@ |  James Louis /McCartney/   |  N/A   |  12 SEP 1977  |      N/A      | ['@F2@'] |            []            |
+| @I14@ |    Heather Anne /Mills/    |   F    |  12 JAN 1968  |      N/A      |    []    |         ['@F3@']         |
+|  @I1@ |   James Paul /McCartney/   |   M    |  18 JUN 1942  |      N/A      | ['@F4@'] | ['@F1@', '@F2@', '@F3@'] |
+|  @I2@ |     James /McCartney/      |   M    |   1 JAN 1902  |   1 JAN 1976  |    []    |     ['@F4@', '@F5@']     |
+|  @I3@ |   Mary Patricia /Mohin/    |   F    |   1 JAN 1909  |   1 JAN 1956  |    []    |         ['@F4@']         |
+|  @I4@ | Peter Michael /McCartney/  |   M    |   7 JAN 1944  |      N/A      | ['@F4@'] |            []            |
+|  @I5@ |     Angie /McCartney/      |   F    |   1 JAN 1902  |   1 JAN 1976  |    []    |         ['@F5@']         |
+|  @I6@ |      Ruth /McCartney/      |   F    |   1 JAN 1942  |      N/A      | ['@F5@'] |            []            |
+|  @I7@ |   Linda Louise /Eastman/   |   F    |  24 SEP 1941  |  17 APR 1998  | ['@F6@'] |         ['@F2@']         |
+|  @I8@ |  Heather Louise McCartney  |   F    |  31 DEC 1962  |      N/A      | ['@F2@'] |            []            |
+|  @I9@ |   Mary Anna /McCartney/    |   F    |  28 AUG 1969  |      N/A      | ['@F2@'] |            []            |
+| @I10@ |   Leopold Vail /Eastman/   |   M    |  12 JAN 1910  |  30 JUL 1991  |    []    |         ['@F6@']         |
+| @I11@ |      Louise /Lindner/      |   F    |   1 JAN 1867  |   1 JAN 1962  |    []    |         ['@F6@']         |
+| @I12@ |  Stella Nina /McCartney/   |   F    |  13 SEP 1971  |      N/A      | ['@F2@'] |            []            |
+| @I13@ |  James Louis /McCartney/   |  N/A   |  12 SEP 1977  |      N/A      | ['@F2@'] |            []            |
+| @I14@ |    Heather Anne /Mills/    |   F    |  12 JAN 1968  |      N/A      |    []    |         ['@F3@']         |
+|  @I2@ |     James /McCartney/      |   M    |   1 JAN 1902  |   1 JAN 1976  |    []    |     ['@F4@', '@F5@']     |
+|  @I3@ |   Mary Patricia /Mohin/    |   F    |   1 JAN 1909  |   1 JAN 1956  |    []    |         ['@F4@']         |
+|  @I4@ | Peter Michael /McCartney/  |   M    |   7 JAN 1944  |      N/A      | ['@F4@'] |            []            |
+|  @I5@ |     Angie /McCartney/      |   F    |   1 JAN 1902  |   1 JAN 1976  |    []    |         ['@F5@']         |
+|  @I6@ |      Ruth /McCartney/      |   F    |   1 JAN 1942  |      N/A      | ['@F5@'] |            []            |
+|  @I7@ |   Linda Louise /Eastman/   |   F    |  24 SEP 1941  |  17 APR 1998  | ['@F6@'] |         ['@F2@']         |
+|  @I8@ |  Heather Louise McCartney  |   F    |  31 DEC 1962  |      N/A      | ['@F2@'] |            []            |
+|  @I9@ |   Mary Anna /McCartney/    |   F    |  28 AUG 1969  |      N/A      | ['@F2@'] |            []            |
+| @I10@ |   Leopold Vail /Eastman/   |   M    |  12 JAN 1910  |  30 JUL 1991  |    []    |         ['@F6@']         |
+| @I11@ |      Louise /Lindner/      |   F    |   1 JAN 1867  |   1 JAN 1962  |    []    |         ['@F6@']         |
+| @I12@ |  Stella Nina /McCartney/   |   F    |  13 SEP 1971  |      N/A      | ['@F2@'] |            []            |
+| @I13@ |  James Louis /McCartney/   |  N/A   |  12 SEP 1977  |      N/A      | ['@F2@'] |            []            |
+| @I14@ |    Heather Anne /Mills/    |   F    |  12 JAN 1968  |      N/A      |    []    |         ['@F3@']         |
+|  @I4@ | Peter Michael /McCartney/  |   M    |   7 JAN 1944  |      N/A      | ['@F4@'] |            []            |
+|  @I5@ |     Angie /McCartney/      |   F    |   1 JAN 1902  |   1 JAN 1976  |    []    |         ['@F5@']         |
+|  @I6@ |      Ruth /McCartney/      |   F    |   1 JAN 1942  |      N/A      | ['@F5@'] |            []            |
+|  @I7@ |   Linda Louise /Eastman/   |   F    |  24 SEP 1941  |  17 APR 1998  | ['@F6@'] |         ['@F2@']         |
+|  @I8@ |  Heather Louise McCartney  |   F    |  31 DEC 1962  |      N/A      | ['@F2@'] |            []            |
+|  @I9@ |   Mary Anna /McCartney/    |   F    |  28 AUG 1969  |      N/A      | ['@F2@'] |            []            |
+| @I10@ |   Leopold Vail /Eastman/   |   M    |  12 JAN 1910  |  30 JUL 1991  |    []    |         ['@F6@']         |
+| @I11@ |      Louise /Lindner/      |   F    |   1 JAN 1867  |   1 JAN 1962  |    []    |         ['@F6@']         |
+| @I12@ |  Stella Nina /McCartney/   |   F    |  13 SEP 1971  |      N/A      | ['@F2@'] |            []            |
+| @I13@ |  James Louis /McCartney/   |  N/A   |  12 SEP 1977  |      N/A      | ['@F2@'] |            []            |
+| @I14@ |    Heather Anne /Mills/    |   F    |  12 JAN 1968  |      N/A      |    []    |         ['@F3@']         |
+|  @I6@ |      Ruth /McCartney/      |   F    |   1 JAN 1942  |      N/A      | ['@F5@'] |            []            |
+|  @I7@ |   Linda Louise /Eastman/   |   F    |  24 SEP 1941  |  17 APR 1998  | ['@F6@'] |         ['@F2@']         |
+|  @I8@ |  Heather Louise McCartney  |   F    |  31 DEC 1962  |      N/A      | ['@F2@'] |            []            |
+|  @I9@ |   Mary Anna /McCartney/    |   F    |  28 AUG 1969  |      N/A      | ['@F2@'] |            []            |
+| @I10@ |   Leopold Vail /Eastman/   |   M    |  12 JAN 1910  |  30 JUL 1991  |    []    |         ['@F6@']         |
+| @I11@ |      Louise /Lindner/      |   F    |   1 JAN 1867  |   1 JAN 1962  |    []    |         ['@F6@']         |
+| @I12@ |  Stella Nina /McCartney/   |   F    |  13 SEP 1971  |      N/A      | ['@F2@'] |            []            |
+| @I13@ |  James Louis /McCartney/   |  N/A   |  12 SEP 1977  |      N/A      | ['@F2@'] |            []            |
+| @I14@ |    Heather Anne /Mills/    |   F    |  12 JAN 1968  |      N/A      |    []    |         ['@F3@']         |
+|  @I8@ |  Heather Louise McCartney  |   F    |  31 DEC 1962  |      N/A      | ['@F2@'] |            []            |
+|  @I9@ |   Mary Anna /McCartney/    |   F    |  28 AUG 1969  |      N/A      | ['@F2@'] |            []            |
+| @I10@ |   Leopold Vail /Eastman/   |   M    |  12 JAN 1910  |  30 JUL 1991  |    []    |         ['@F6@']         |
+| @I11@ |      Louise /Lindner/      |   F    |   1 JAN 1867  |   1 JAN 1962  |    []    |         ['@F6@']         |
+| @I12@ |  Stella Nina /McCartney/   |   F    |  13 SEP 1971  |      N/A      | ['@F2@'] |            []            |
+| @I13@ |  James Louis /McCartney/   |  N/A   |  12 SEP 1977  |      N/A      | ['@F2@'] |            []            |
+| @I14@ |    Heather Anne /Mills/    |   F    |  12 JAN 1968  |      N/A      |    []    |         ['@F3@']         |
+| @I15@ | Beatrice Milly /McCartney/ |   F    |  28 OCT 2003  |      N/A      | ['@F3@'] |            []            |
+| @I16@ |      Nancy /Shevell/       |   F    |  20 NOV 1959  |      N/A      |    []    |         ['@F1@']         |
++-------+----------------------------+--------+---------------+---------------+----------+--------------------------+
+| @I10@ |   Leopold Vail /Eastman/   |   M    |  12 JAN 1910  |  30 JUL 1991  |    []    |         ['@F6@']         |
+| @I11@ |      Louise /Lindner/      |   F    |   1 JAN 1867  |   1 JAN 1962  |    []    |         ['@F6@']         |
+| @I12@ |  Stella Nina /McCartney/   |   F    |  13 SEP 1971  |      N/A      | ['@F2@'] |            []            |
+| @I13@ |  James Louis /McCartney/   |  N/A   |  12 SEP 1977  |      N/A      | ['@F2@'] |            []            |
+| @I14@ |    Heather Anne /Mills/    |   F    |  12 JAN 1968  |      N/A      |    []    |         ['@F3@']         |
+| @I15@ | Beatrice Milly /McCartney/ |   F    |  28 OCT 2003  |      N/A      | ['@F3@'] |            []            |
+| @I16@ |      Nancy /Shevell/       |   F    |  20 NOV 1959  |      N/A      |    []    |         ['@F1@']         |
++-------+----------------------------+--------+---------------+---------------+----------+--------------------------+
+| @I12@ |  Stella Nina /McCartney/   |   F    |  13 SEP 1971  |      N/A      | ['@F2@'] |            []            |
+| @I13@ |  James Louis /McCartney/   |  N/A   |  12 SEP 1977  |      N/A      | ['@F2@'] |            []            |
+| @I14@ |    Heather Anne /Mills/    |   F    |  12 JAN 1968  |      N/A      |    []    |         ['@F3@']         |
+| @I15@ | Beatrice Milly /McCartney/ |   F    |  28 OCT 2003  |      N/A      | ['@F3@'] |            []            |
+| @I16@ |      Nancy /Shevell/       |   F    |  20 NOV 1959  |      N/A      |    []    |         ['@F1@']         |
++-------+----------------------------+--------+---------------+---------------+----------+--------------------------+
+| @I15@ | Beatrice Milly /McCartney/ |   F    |  28 OCT 2003  |      N/A      | ['@F3@'] |            []            |
+| @I16@ |      Nancy /Shevell/       |   F    |  20 NOV 1959  |      N/A      |    []    |         ['@F1@']         |
++-------+----------------------------+--------+---------------+---------------+----------+--------------------------+
+Families
++------+------------------+----------+----------+------------------------------------+-----------------+
+|  ID  | Date of Marriage | Parent 1 | Parent 2 |              Children              | Date of Divorce |
++------+------------------+----------+----------+------------------------------------+-----------------+
+| @F1@ |    1 JAN 2011    |   @I1@   |  @I16@   |                 []                 |       N/A       |
+| @F2@ |    1 JAN 1960    |   @I1@   |   @I7@   | ['@I8@', '@I9@', '@I12@', '@I13@'] |       N/A       |
+| @F3@ |    1 JAN 2002    |   @I1@   |  @I14@   |             ['@I15@']              |   18 FEB 2008   |
+| @F4@ |    1 JAN 1930    |   @I2@   |   @I3@   |          ['@I1@', '@I4@']          |       N/A       |
+| @F5@ |    1 JAN 1940    |   @I2@   |   @I5@   |              ['@I6@']              |       N/A       |
+| @F6@ |    1 JAN 1940    |  @I10@   |  @I11@   |              ['@I7@']              |       N/A       |
++------+------------------+----------+----------+------------------------------------+-----------------+
