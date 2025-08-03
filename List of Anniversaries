@@ -1,0 +1,32 @@
+from ged4py.parser import GedcomReader
+from datetime import date, timedelta
+def get_upcoming_anniversaries(gedcom_file_path, days_in_advance=30):
+    today = date.today()
+    upcoming_anniversaries = []
+    with GedcomReader(gedcom_file_path) as parser:
+        for family_record in parser.records0("MARR"):
+            marriage_date_str = family_record.sub_tag_value("MARR/DATE")
+            if marriage_date_str:
+                try:
+                    marriage_date = date.strptime(marriage_date_str, "%d %b %Y")
+                except ValueError:
+                        print(f"Could not parse marriage date: {marriage_date_str}")
+                        continue
+                anniversary_this_year = date(today.year, marriage_date.month, marriage_date.day)
+                if today <= anniversary_this_year <= today + timedelta(days=days_in_advance):
+                    husband_name = family_record.sub_tag("HUSB").name.format() if family_record.sub_tag("HUSB") else "N/A"
+                    wife_name = family_record.sub_tag("WIFE").name.format() if family_record.sub_tag("WIFE") else "N/A"
+                    upcoming_anniversaries.append({
+                        "Husband": husband_name,
+                        "Wife": wife_name,
+                        "Anniversary Date": anniversary_this_year.strftime("%d-%b-%Y")
+                    })
+    return upcoming_anniversaries
+gedcom_file = "C:\\Users\\Ernesto Salinas\\OneDrive\\Desktop\\ssw555_proj1.ged"
+anniversaries = get_upcoming_anniversaries(gedcom_file, days_in_advance=30)
+if anniversaries:
+    print("Upcoming Marriage Anniversaries:")
+    for anniv in anniversaries:
+        print(f"- {anniv['Husband']} and {anniv['Wife']} anniversary is on {anniv['Anniversary Date']}")
+else:
+    print("No upcoming anniversaries.")
