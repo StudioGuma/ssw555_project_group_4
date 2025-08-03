@@ -472,6 +472,28 @@ def display_marriages_per_person(fam_table: list, indi_table: list) -> None:
             spouse_name = id_to_name.get(spouse_id, "Unknown")
             print(f"{person_name} ({person_id}) married {spouse_name} ({spouse_id}) on {date}")
 
+def show_spouse_names(fam_table, indi_table):
+    indi_dict = {indi[0]: indi[1] for indi in indi_table}
+
+    print("Family ID | Husband | Wife")
+    print("-----------------------------")
+    for fam in fam_table:
+        fam_id = fam[0]
+        husb_id = fam[1]
+        wife_id = fam[2]
+        husb_name = indi_dict.get(husb_id, "Unknown")
+        wife_name = indi_dict.get(wife_id, "Unknown")
+        print(f"{fam_id} | {husb_name} | {wife_name}")
+
+def validate_name_fields(indi_table):
+    for indi in indi_table:
+        indi_id = indi[0]
+        name = indi[1]
+
+        name_parts = name.strip().split("/")
+        if len(name_parts) < 2 or not name_parts[0].strip() or not name_parts[1].strip():
+            print(f"ERROR: US26: Individual {indi_id} does not have both a first and last name.")
+
 
 def main() -> int:
 	try:
@@ -603,6 +625,8 @@ def main() -> int:
 		list_families_sorted_by_marriage(fam_table)
 		show_divorce_dates(fam_table, indi_table)
 		display_marriages_per_person(fam_table, indi_table)
+		show_spouse_names(fam_table, indi_table)
+		validate_name_fields(indi_table)
 
 		for fam in fam_table:
 			fam = order_siblings(indi_table, fam)
