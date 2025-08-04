@@ -47,6 +47,19 @@ class Tests(unittest.TestCase):
 		["@F1@", "13 APR 1999", "@I1@", "@I2@", ["@I3@", "@I4@"], "N/A"]
 	]
 
+	test_indi_table4: list = [
+		["@I1@", "Mr. Fakename", "M", "1 JAN 1940", "N/A", [], ["@F1@"]],
+		["@I2@", "Mrs. Fakename", "F", "2 JAN 1941", "N/A", [], ["@F1@"]],
+		["@I3@", "Mr. Fakename III", "M", "7 JUL 2025", "N/A", ["@F1@"], []],
+		["@I4@", "Mx. Fakename III", "F", "10 JUL 2025", "N/A", ["@F1@"], []],
+		["@I5@", "Dr. Fakename", "F", "3 JAN 1940", "N/A", [], ["@F2@"]]
+	]
+
+	test_fam_table4: list = [
+		["@F1@", "13 APR 1999", "@I1@", "@I2@", ["@I3@", "@I4@"], "N/A"],
+		["@F2@", "13 APR 1999", "@I1@", "@I5@", [], "N/A"]
+	]
+
 	def test_smaller(self):
 		self.assertRaises(Exception, marriage_after_14, (self.test_indi_table, self.test_fam_table))
 		self.assertRaises(Exception, birth_before_parents_death, (self.test_indi_table2, self.test_fam_table2))
@@ -57,6 +70,8 @@ class Tests(unittest.TestCase):
 		all_indi_fields_filled, ([["@I1@", "Mr. Fakename", "M", "N/A", "N/A", [], ["@F1@"]]]))
 		self.assertRaises(Exception,
 		all_fam_fields_filled, ([["@F1@", "N/A", "@I1@", "@I2@", ["@I3@", "@I4@"], "N/A"]]))
+		self.assertRaises(Exception, sibling_spacing, (self.test_indi_table4, self.test_fam_table3))
+		self.assertRaises(Exception, unique_families_by_spouses, (self.test_indi_table4, self.test_fam_table4))
 
 if __name__ == "__main__":
 	unittest.main(verbosity=2)

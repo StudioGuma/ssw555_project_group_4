@@ -220,11 +220,9 @@ def birth_after_marriage_and_before_divorce(indi_table: list, fam_table: list) -
 
 					marr_date = parse_date(marr)
 					div_date = parse_date(div)
-					# if marr != "N/A" and cmp_dates(birth, marr) < 0:
 					if (marr_date and birth_date < marr_date):
 						print(f"ERROR: US08: {child} born before parents' marriage")
 
-					# if div != "N/A" and cmp_dates(birth, div) > 0:
 					if (div_date and birth_date > div_date):
 						print(f"ERROR: US08: {child} born after parents' divorce")
 
@@ -494,6 +492,50 @@ def validate_name_fields(indi_table):
         if len(name_parts) < 2 or not name_parts[0].strip() or not name_parts[1].strip():
             print(f"ERROR: US26: Individual {indi_id} does not have both a first and last name.")
 
+def sibling_spacing(indi_table: list, fam_table: list) -> None:
+	for fam in fam_table:
+		siblings = fam[4]
+		sibling_births: list = []
+
+		for sibling in siblings:
+			for indi in indi_table:
+				if indi[0] == sibling:
+					sibling_births.append(indi[3])
+					break
+
+		sibling_bds: list = list(map(parse_date, sibling_births))
+		for i in range(len(sibling_bds)):
+			for j in range(i + 1, len(sibling_bds)):
+				days: int = abs((sibling_bds[i] - sibling_bds[j]).days)
+				if (2 < days < 210):
+					raise Exception(f"{argv[0]}: \
+					siblings were born more than 2 days but less than 9 months apart")
+
+
+def unique_families_by_spouses(indi_table: list, fam_table: list) -> None:
+	# create a list of lists of each family's spouse names and marriage date
+	fam_info: list = []
+
+	for fam in fam_table:
+		new_elem: list = []
+		new_elem.append(fam[1])
+
+		for indi in indi_table:
+			if (indi[0] == fam[2] or indi[0] == fam[3]):
+				new_elem.append(indi[1])
+
+		new_elem.sort()
+		fam_info.append(new_elem)
+
+	print(fam_info)
+
+	fam_no_dups: list = []
+	for fam in fam_info:
+		if fam not in fam_no_dups:
+			fam_no_dups.append(fam)
+
+	if (len(fam_info) != len(fam_no_dups)):
+		raise Exception(f"{argv[0]}: multiple families have the same spouses and marriage date")
 
 def main() -> int:
 	try:
@@ -625,6 +667,7 @@ def main() -> int:
 		list_families_sorted_by_marriage(fam_table)
 		show_divorce_dates(fam_table, indi_table)
 		display_marriages_per_person(fam_table, indi_table)
+		unique_families_by_spouses(indi_table, fam_table)
 		show_spouse_names(fam_table, indi_table)
 		validate_name_fields(indi_table)
 
