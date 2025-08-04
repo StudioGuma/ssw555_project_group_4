@@ -124,7 +124,6 @@ def birth_before_parents_death(indi_table: list, fam_table: list) -> None:
 					break
 
 def list_recent_births(indi_table: list) -> list:
-	# Assumes valid date string
 	birth_list: list = []
 
 	for indi in indi_table:
@@ -132,6 +131,8 @@ def list_recent_births(indi_table: list) -> list:
 
 		if (birth != "N/A"):
 			birth_date = parse_date(birth)
+			if not birth_date:
+				continue  # Skip invalid/partial dates
 			delta = datetime.now() - birth_date
 			if (delta.days < 31):
 				birth_list.append(indi[0] + ": " + indi[1])
@@ -220,23 +221,28 @@ def birth_after_marriage_and_before_divorce(indi_table: list, fam_table: list) -
 
 					marr_date = parse_date(marr)
 					div_date = parse_date(div)
+					# if marr != "N/A" and cmp_dates(birth, marr) < 0:
 					if (marr_date and birth_date < marr_date):
 						print(f"ERROR: US08: {child} born before parents' marriage")
 
+					# if div != "N/A" and cmp_dates(birth, div) > 0:
 					if (div_date and birth_date > div_date):
 						print(f"ERROR: US08: {child} born after parents' divorce")
 
 def get_age_at_date(birth: str, date: str) -> int:
-	b_day, b_month, b_year = birth.split()
-	d_day, d_month, d_year = date.split()
+	b_parts = birth.split()
+	d_parts = date.split()
+
+	if len(b_parts) != 3 or len(d_parts) != 3:
+		return -1  # Invalid or partial date; can't calculate age
+
+	b_day, b_month, b_year = b_parts
+	d_day, d_month, d_year = d_parts
 
 	b_day, b_month, b_year = int(b_day), Month[b_month].value, int(b_year)
 	d_day, d_month, d_year = int(d_day), Month[d_month].value, int(d_year)
 
 	age = d_year - b_year
-
-
-
 	if (b_month > d_month) or (d_month == b_month and b_day > d_day):
 		age -= 1
 	
@@ -245,32 +251,24 @@ def get_age_at_date(birth: str, date: str) -> int:
 def marriage_after_14(indi_table: list, fam_table: list) -> None:
 	for fam in fam_table:
 		marr_date: str = fam[1]
-		if (marr_date != "N/A"):
-			husb: str = fam[2]
-			wife: str = fam[3]
+		if marr_date == "N/A" or len(marr_date.split()) != 3 or not is_valid_date_str(marr_date):
+			continue  # Skip invalid or partial marriage date
 
-			husb_birth: str = "N/A"
-			wife_birth: str = "N/A"
+		husb: str = fam[2]
+		wife: str = fam[3]
 
-			for indi in indi_table:
-				if (husb != "N/A" and indi[0] == husb):
-					husb_birth: str = indi[3]
+		husb_birth = next((indi[3] for indi in indi_table if indi[0] == husb), "N/A")
+		wife_birth = next((indi[3] for indi in indi_table if indi[0] == wife), "N/A")
 
-				if (wife != "N/A" and indi[0] == wife):
-					wife_birth: str = indi[3]
-			
+		if husb_birth != "N/A" and len(husb_birth.split()) == 3 and is_valid_date_str(husb_birth):
+			age = get_age_at_date(husb_birth, marr_date)
+			if age != -1 and age < 14:
+				print(f"ERROR: In family {fam[0]}: Husband {husb} was married before the age of 14.")
 
-			if (husb_birth != "N/A"):
-				age = get_age_at_date(husb_birth, marr_date)
-
-				if (age < 14):
-					print(f"ERROR: In family {fam[0]}: Husband {husb} was married before the age of 14.")
-			
-			if (wife_birth != "N/A"):
-				age = get_age_at_date(wife_birth, marr_date)
-
-				if (age < 14):
-					print(f"ERROR: In family {fam[0]}: Wife {wife} was married before the age of 14.")
+		if wife_birth != "N/A" and len(wife_birth.split()) == 3 and is_valid_date_str(wife_birth):
+			age = get_age_at_date(wife_birth, marr_date)
+			if age != -1 and age < 14:
+				print(f"ERROR: In family {fam[0]}: Wife {wife} was married before the age of 14.")
 
 def list_living_married(indi_table: list, fam_table: list) -> list:
     living_married = []
@@ -359,34 +357,40 @@ def order_siblings(indi_table: list, fam: list) -> list:
 	return fam
 
 def all_indi_fields_filled(indi_table: list) -> None:
-	for indi in indi_table:
-		if (indi[0] == "N/A"):
-			raise Exception(argv[0] + ": individual ID must be filled")
-		if (indi[1] == "N/A"):
-			raise Exception(argv[0] + f": name of individual {indi[0]} must be filled")
-		if (not is_valid_date_str(indi[3])):
-			raise Exception(argv[0] + f": birth date of individual {indi[0]} must be valid")
-	return
+    for indi in indi_table:
+        if indi[0] == "N/A":
+            raise Exception(f"Individual ID must be filled")
+        if indi[1] == "N/A":
+            raise Exception(f"Name of individual {indi[0]} must be filled")
+        # Optional stricter check on date format
+        if indi[3] != "N/A" and len(indi[3].split()) < 3:
+            continue  # or optionally log as a warning
+    return
 
 def all_fam_fields_filled(fam_table: list) -> None:
-	for fam in fam_table:
-		if (fam[0] == "N/A"):
-			raise Exception(argv[0] + f": family ID must be filled")
-		if (not is_valid_date_str(fam[1])):
-			raise Exception(argv[0] + f": marriage date of family {fam[0]} must be filled")
-		if (fam[2] == "N/A"):
-			raise Exception(argv[0] + f": parent 1 of family {fam[0]} must be filled")
-		if (fam[3] == "N/A"):
-			raise Exception(argv[0] + f": parent 2 of family {fam[0]} must be filled")
-	return
-		
+    for fam in fam_table:
+        if fam[0] == "N/A":
+            raise Exception(f"Family ID must be filled")
+        if fam[2] == "N/A":
+            raise Exception(f"Parent 1 of family {fam[0]} must be filled")
+        if fam[3] == "N/A":
+            raise Exception(f"Parent 2 of family {fam[0]} must be filled")
+        if fam[1] != "N/A" and len(fam[1].split()) < 3:
+            raise Exception(f"Invalid marriage date format for {fam[0]}")
+    return
 
 def list_families_sorted_by_marriage(fam_table: list) -> None:
-    valid_fams = [fam for fam in fam_table if fam[1] != "N/A"]
-    
-    valid_fams.sort(key=lambda fam: datetime.strptime(fam[1], "%d %b %Y"))
+    valid_fams = []
+    for fam in fam_table:
+        try:
+            date_obj = datetime.strptime(fam[1], "%d %b %Y")
+            valid_fams.append((date_obj, fam))
+        except:
+            continue  # Skip illegitimate marriage dates
 
-    for fam in valid_fams:
+    # Sort by date and print
+    valid_fams.sort(key=lambda x: x[0])
+    for _, fam in valid_fams:
         fam_id = fam[0]
         husb_id = fam[2]
         wife_id = fam[3]
@@ -473,15 +477,21 @@ def display_marriages_per_person(fam_table: list, indi_table: list) -> None:
 def show_spouse_names(fam_table, indi_table):
     indi_dict = {indi[0]: indi[1] for indi in indi_table}
 
-    print("Family ID | Husband | Wife")
-    print("-----------------------------")
+    print("Family ID | Husband           | Wife")
+    print("------------------------------------------")
     for fam in fam_table:
+        # Defensive: skip if not enough fields
+        if len(fam) < 4:
+            continue
+
         fam_id = fam[0]
-        husb_id = fam[1]
-        wife_id = fam[2]
+        husb_id = fam[2]  
+        wife_id = fam[3]  
+
         husb_name = indi_dict.get(husb_id, "Unknown")
         wife_name = indi_dict.get(wife_id, "Unknown")
-        print(f"{fam_id} | {husb_name} | {wife_name}")
+
+        print(f"{fam_id} | {husb_name:<18} | {wife_name}")
 
 def validate_name_fields(indi_table):
     for indi in indi_table:
@@ -536,6 +546,65 @@ def unique_families_by_spouses(indi_table: list, fam_table: list) -> None:
 
 	if (len(fam_info) != len(fam_no_dups)):
 		raise Exception(f"{argv[0]}: multiple families have the same spouses and marriage date")
+
+def include_partial_dates(indi_table, fam_table):
+	print("US31: Partial Dates Detected:")
+	partials = []  
+	for indi in indi_table:
+		birth = indi[3]
+		death = indi[4]
+		if birth != "N/A" and (len(birth.split()) < 3 or not is_valid_date_str(birth)):
+			msg = f"Individual {indi[0]} ({indi[1]}) has partial birth date: {birth}"
+			print(msg)
+			partials.append(msg)
+		if death != "N/A" and (len(death.split()) < 3 or not is_valid_date_str(death)):
+			msg = f"Individual {indi[0]} ({indi[1]}) has partial death date: {death}"
+			print(msg)
+			partials.append(msg)
+	for fam in fam_table:
+		marr = fam[1]
+		di = fam[5]
+		if marr != "N/A" and (len(marr.split()) < 3 or not is_valid_date_str(marr)):
+			msg = f"Family {fam[0]} has partial marriage date: {marr}"
+			print(msg)
+			partials.append(msg)
+		if di != "N/A" and (len(di.split()) < 3 or not is_valid_date_str(di)):
+			msg = f"Family {fam[0]} has partial divorce date: {di}"
+			print(msg)
+			partials.append(msg)
+	return partials
+
+
+def reject_illegitimate_dates(indi_table, fam_table):
+	print("US32: Illegitimate (Unparsable) Dates:")
+	illegits = []  
+	for indi in indi_table:
+		birth = indi[3]
+		death = indi[4]
+		if birth != "N/A":
+			if not is_valid_date_str(birth):
+				msg = f"Individual {indi[0]} ({indi[1]}) has illegitimate birth date: {birth}"
+				print(msg)
+				illegits.append(msg)
+		if death != "N/A":
+			if not is_valid_date_str(death):
+				msg = f"Individual {indi[0]} ({indi[1]}) has illegitimate death date: {death}"
+				print(msg)
+				illegits.append(msg)
+	for fam in fam_table:
+		marr = fam[1]
+		di = fam[5]
+		if marr != "N/A":
+			if not is_valid_date_str(marr):
+				msg = f"Family {fam[0]} has illegitimate marriage date: {marr}"
+				print(msg)
+				illegits.append(msg)
+		if di != "N/A":
+			if not is_valid_date_str(di):
+				msg = f"Family {fam[0]} has illegitimate divorce date: {di}"
+				print(msg)
+				illegits.append(msg)
+	return illegits
 
 def main() -> int:
 	try:
@@ -628,24 +697,22 @@ def main() -> int:
 
 					case 2:
 						if (len(params) > 2 and is_valid_tag(level, params[1])):
-							# guaranteed to be DATE
-							if (not is_valid_date_str(params[2])):
-								raise Exception(argv[0] + ": invalid date " + line)
+							date_value = params[2]
 
 							if is_birth:
-								cur_indi_row[3] = params[2]
+								cur_indi_row[3] = date_value
 								is_birth = False
 
 							elif is_death:
-								cur_indi_row[4] = params[2]
+								cur_indi_row[4] = date_value
 								is_death = False
 
 							elif is_marr:
-								cur_fam_row[1] = params[2]
+								cur_fam_row[1] = date_value
 								is_marr = False
 
 							elif is_div:
-								cur_fam_row[5] = params[2]
+								cur_fam_row[5] = date_value
 								is_div = False
 
 				line = ged.readline()
@@ -670,6 +737,8 @@ def main() -> int:
 		unique_families_by_spouses(indi_table, fam_table)
 		show_spouse_names(fam_table, indi_table)
 		validate_name_fields(indi_table)
+		include_partial_dates(indi_table, fam_table)
+		reject_illegitimate_dates(indi_table, fam_table)
 
 		for fam in fam_table:
 			fam = order_siblings(indi_table, fam)
